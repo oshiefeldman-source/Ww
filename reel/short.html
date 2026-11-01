@@ -1,0 +1,462 @@
+<title>Five Ways Out Short</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 9:16 reel frame centred on a dark field, 3D chamber behind, captions in the lower third, controls under the frame. */
+:root {
+  --field: #0b1410;        /* night over Canberra, green-biased black */
+  --chamber: #1f4a36;      /* House of Reps green leather */
+  --ink: #f2efe6;          /* caption white */
+  --ink-dim: #a9b8ae;
+  --gold: #e3b54a;         /* Governor-General / emphasis */
+  --labor: #d8343a;
+  --coalition: #2f6fd1;
+  --cross: #8fa59a;
+  --display: "Bricolage Grotesque", "Inter Display", "Arial Narrow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--display);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.stage {
+  position: relative;
+  height: calc(100% - 64px);
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 30%, #173528 0%, var(--field) 70%);
+  container-type: size;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(227,181,74,.12);
+}
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.vignette { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(11,20,16,.9) 0%, rgba(11,20,16,.55) 14%, rgba(11,20,16,0) 22%, rgba(11,20,16,0) 31%, rgba(11,20,16,.9) 46%, rgba(11,20,16,.95) 62%, rgba(11,20,16,.97) 100%); }
+
+.top { position: absolute; left: 11cqw; right: 11cqw; top: 12.5cqh; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); }
+.top .handle { text-transform: none; letter-spacing: .06em; color: var(--ink); }
+.follow { position: absolute; left: 11cqw; right: 11cqw; top: 17cqh; display: flex; flex-direction: column; align-items: center; gap: 1.2cqh; opacity: 0; }
+.follow span { font-weight: 500; }
+.follow b { font-size: 6.4cqw; white-space: nowrap; font-weight: 800; letter-spacing: -.02em; color: var(--field); background: var(--gold); border-radius: 2.2cqw; padding: .6cqh 4cqw 1cqh; box-shadow: 0 2cqh 5cqh rgba(0,0,0,.55); }
+.top .mark { display: flex; gap: 1.6cqw; align-items: center; }
+.top .mark i { width: 2.2cqw; height: 2.2cqw; border-radius: 50%; background: var(--gold); display: inline-block; }
+.progress { position: absolute; left: 11cqw; right: 11cqw; top: 10.5cqh; display: flex; gap: 1cqw; }
+.progress span { flex: 1; height: .45cqw; min-height: 2px; border-radius: 2px; background: rgba(242,239,230,.18); overflow: hidden; }
+.progress span b { display: block; height: 100%; width: 0; background: var(--ink); }
+
+.card { position: absolute; left: 11cqw; right: 17cqw; bottom: 24cqh; display: flex; flex-direction: column; gap: 1.8cqh; opacity: 0; will-change: transform, opacity; }
+.eyebrow { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); display: flex; gap: 2cqw; align-items: center; }
+.eyebrow .n { border: 1px solid currentColor; border-radius: 99px; padding: .3cqh 2cqw; }
+h1, h2 { margin: 0; font-weight: 800; letter-spacing: -.02em; line-height: .95; text-wrap: balance; font-variation-settings: "opsz" 96; }
+h1 { font-size: 9.6cqw; }
+h2 { font-size: 8.4cqw; }
+h1 em, h2 em { font-style: normal; color: var(--gold); }
+.body { font-size: 3.7cqw; line-height: 1.32; color: var(--ink); font-weight: 400; margin: 0; max-width: 34ch; }
+.meta { display: grid; grid-template-columns: auto 1fr; gap: .8cqh 3cqw; font-size: 3cqw; border-top: 1px solid rgba(242,239,230,.18); padding-top: 1.8cqh; }
+.meta dt { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); padding-top: .4cqh; }
+.meta dd { margin: 0; color: var(--ink); line-height: 1.3; }
+.big { position: absolute; right: 17cqw; top: 17cqh; text-align: right; opacity: 0; font-variant-numeric: tabular-nums; text-shadow: 0 2px 18px rgba(11,20,16,.9), 0 0 4px rgba(11,20,16,.8); }
+.big .v { font-size: 16cqw; font-weight: 800; line-height: .9; letter-spacing: -.04em; }
+.big .l { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); max-width: 40cqw; margin-left: auto; margin-top: 1cqh; }
+.legend { display: flex; gap: 4cqw; font-family: var(--mono); font-size: 2.6cqw; color: var(--ink-dim); letter-spacing: .08em; }
+.legend span { display: flex; align-items: center; gap: 1.4cqw; }
+.legend i { width: 2.4cqw; height: 2.4cqw; border-radius: 2px; display: inline-block; }
+.rank { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.3cqh; }
+.rank li { display: grid; grid-template-columns: 1fr auto; gap: 3cqw; font-size: 3.6cqw; align-items: baseline; border-bottom: 1px solid rgba(242,239,230,.12); padding-bottom: 1.1cqh; }
+.rank li small { font-family: var(--mono); font-size: 2.6cqw; color: var(--ink-dim); letter-spacing: .1em; text-transform: uppercase; }
+.fine { font-family: var(--mono); font-size: 2.3cqw; color: var(--ink-dim); letter-spacing: .06em; line-height: 1.5; }
+
+.hook h1 { font-size: 12.4cqw; line-height: .92; }
+.hook .sub, .r .sub { font-size: 4.6cqw; color: var(--ink); margin: 0; font-weight: 500; }
+.hook .sub { font-family: var(--mono); font-size: 3.4cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.r .num { font-size: 26cqw; font-weight: 800; line-height: .78; color: var(--gold); letter-spacing: -.05em; }
+.r h2 { font-size: 11.5cqw; }
+.end h2 { font-size: 11cqw; }
+.end .cta { margin: 0; align-self: flex-start; font-size: 6.4cqw; font-weight: 800; color: var(--field); background: var(--ink); border-radius: 2cqw; padding: .4cqh 3.6cqw .8cqh; }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.controls button { font: 500 13px/1 var(--mono); color: var(--ink); background: rgba(242,239,230,.07); border: 1px solid rgba(242,239,230,.18);
+  border-radius: 99px; padding: 9px 14px; cursor: pointer; letter-spacing: .04em; }
+.controls button:hover { background: rgba(242,239,230,.14); }
+.controls button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.controls button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.controls .chips { display: flex; gap: 4px; }
+.controls .chips button { padding: 9px 10px; min-width: 34px; }
+body.record { padding: 0; gap: 0; }
+body.record .stage { height: 100%; border-radius: 0; box-shadow: none; }
+body.record .controls { display: none; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="progress" id="progress"></div>
+  <div class="top"><span class="mark"><i></i>Canberra explainer</span><span id="clock" class="handle">@osherfeldman</span></div>
+
+  <div class="follow" id="follow"><b><span>Follow</span> @osherfeldman</b></div>
+  <div class="big" id="big"><div class="v" id="bigv">0</div><div class="l" id="bigl"></div></div>
+
+  <section class="card hook" data-scene="0">
+    <h1>Albo could be out.<br><em>No election needed.</em></h1>
+    <p class="sub">5 ways it could happen</p>
+  </section>
+  <section class="card r" data-scene="1"><div class="num">1</div><h2>He quits</h2><p class="sub">Labor picks the next PM. You don't get a vote.</p></section>
+  <section class="card r" data-scene="2"><div class="num">2</div><h2>His party <em>dumps him</em></h2><p class="sub">75% of Labor's caucus has to sign first.</p></section>
+  <section class="card r" data-scene="3"><div class="num">3</div><h2>The House <em>votes him out</em></h2><p class="sub">20+ Labor MPs would have to flip.</p></section>
+  <section class="card r" data-scene="4"><div class="num">4</div><h2>Ruled <em>ineligible</em></h2><p class="sub">By the High Court, under section 44.</p></section>
+  <section class="card r" data-scene="5"><div class="num">5</div><h2>The G-G <em>sacks him</em></h2><p class="sub">It's happened once: Whitlam, 1975.</p></section>
+  <section class="card end" data-scene="6">
+    <h2>Which one is <em>most likely?</em></h2>
+    <p class="cta">Comment 1 to 5 ↓</p>
+    <div class="fine">Explainer · Sources: Australian Constitution ss 44, 64; ALP caucus rules; AEC 2025 results</div>
+  </section>
+</div>
+
+<div class="controls">
+  <button id="play" type="button" aria-pressed="true">Pause</button>
+  <button id="restart" type="button">Restart</button>
+  <div class="chips" id="chips" role="group" aria-label="Jump to scene"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const RECORD = /[?&]record\b/.test(location.search) || window.__RECORD;
+  if (RECORD) document.body.classList.add('record');
+
+  // ---------- timeline ----------
+  // short cut: each beat reuses one of the long reel's visual states (v) over a slice of its progress (p0..p1)
+  const SCENES = [
+    { s: 0, e: 3, v: 3, p0: .55, p1: 1 }, { s: 3, e: 6.5, v: 1, p0: .1, p1: 1 },
+    { s: 6.5, e: 10, v: 2, p0: .15, p1: 1 }, { s: 10, e: 13.5, v: 3, p0: .25, p1: 1 },
+    { s: 13.5, e: 17, v: 4, p0: .1, p1: .9 }, { s: 17, e: 20.5, v: 5, p0: 0, p1: 1 },
+    { s: 20.5, e: 25, v: 6, p0: 0, p1: .6 }
+  ];
+  const DUR = 25;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const sceneAt = t => { for (let i = SCENES.length - 1; i >= 0; i--) if (t >= SCENES[i].s) return i; return 0; };
+
+  // ---------- three setup ----------
+  const stage = document.getElementById('stage');
+  const canvas = document.getElementById('gl');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: RECORD });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x0b1410, 18, 42);
+  const camera = new THREE.PerspectiveCamera(42, 9/16, 0.1, 100);
+
+  scene.add(new THREE.HemisphereLight(0xcfe6d8, 0x0b1410, 0.4));
+  const key = new THREE.DirectionalLight(0xfff1d6, 1.05);
+  key.position.set(6, 14, 8); key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  Object.assign(key.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 40 });
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0x6fbf98, 0.5); rim.position.set(-8, 5, -10); scene.add(rim);
+  const spot = new THREE.PointLight(0xe3b54a, 0, 9, 2); scene.add(spot);
+
+  // floor: green carpet disc + dais rings
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(16, 64), new THREE.MeshStandardMaterial({ color: 0x0f2a1e, roughness: .95 }));
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(2.4, 2.46, 96), new THREE.MeshBasicMaterial({ color: 0xe3b54a, transparent: true, opacity: .35 }));
+  ring.rotation.x = -Math.PI/2; ring.position.y = .01; scene.add(ring);
+
+  // central table
+  const table = new THREE.Mesh(new THREE.BoxGeometry(1.6, .5, 4.2), new THREE.MeshStandardMaterial({ color: 0x5a3b22, roughness: .6 }));
+  table.position.set(0, .25, -.6); table.castShadow = table.receiveShadow = true; scene.add(table);
+  const mace = new THREE.Mesh(new THREE.CylinderGeometry(.05, .05, 1.4, 12), new THREE.MeshStandardMaterial({ color: 0xe3b54a, metalness: .8, roughness: .3 }));
+  mace.rotation.x = Math.PI/2; mace.position.set(0, .56, -.6); scene.add(mace);
+
+  // Speaker's chair
+  const speaker = new THREE.Mesh(new THREE.BoxGeometry(1, 1.8, .8), new THREE.MeshStandardMaterial({ color: 0x2b5a43, roughness: .7 }));
+  speaker.position.set(0, .9, -4.2); speaker.castShadow = true; scene.add(speaker);
+
+  // ---------- seats: U-shaped chamber ----------
+  // path: right straight (x=+r, z from -3.6 to 2.4), semicircle around (0,2.4), left straight back to -3.6
+  const ROWS = [2.6, 3.35, 4.1, 4.85, 5.6];
+  const STRAIGHT = 6;
+  const pathLen = r => 2*STRAIGHT + Math.PI*r;
+  const totalLen = ROWS.reduce((a, r) => a + pathLen(r), 0);
+  const seats = [];
+  let assigned = 0;
+  ROWS.forEach((r, ri) => {
+    const n = ri === ROWS.length - 1 ? 150 - assigned : Math.round(150 * pathLen(r) / totalLen);
+    assigned += n;
+    for (let k = 0; k < n; k++) {
+      const u = (k + .5) / n, d = u * pathLen(r);
+      let x, z, rot;
+      if (d < STRAIGHT) { x = r; z = -3.6 + d; rot = -Math.PI/2; }
+      else if (d < STRAIGHT + Math.PI*r) { const a = (d - STRAIGHT) / r; x = r*Math.cos(a); z = 2.4 + r*Math.sin(a); rot = -Math.PI/2 - a; }
+      else { x = -r; z = 2.4 - (d - STRAIGHT - Math.PI*r); rot = Math.PI/2; }
+      seats.push({ x, z, y: .2 + ri * .28, rot, u, row: ri });
+    }
+  });
+  // party by position around the U: government on the Speaker's right
+  seats.sort((a, b) => a.u - b.u || a.row - b.row);
+  seats.forEach((s, i) => { s.party = i < 94 ? 'L' : i < 107 ? 'X' : 'C'; s.rank = i; });
+  const laborSeats = seats.filter(s => s.party === 'L');
+  // deterministic shuffles for "lighting up" order
+  const rng = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(7);
+  laborSeats.forEach(s => s.order = rng());
+  const sortedLabor = [...laborSeats].sort((a, b) => a.order - b.order);
+  sortedLabor.forEach((s, i) => s.lorder = i);
+  seats.forEach(s => s.delay = rng());
+
+  const seatGeo = new THREE.BoxGeometry(.5, .32, .46);
+  seatGeo.translate(0, .16, 0);
+  const backGeo = new THREE.BoxGeometry(.5, .5, .1);
+  backGeo.translate(0, .45, -.2);
+  const seatMat = new THREE.MeshStandardMaterial({ roughness: .55, metalness: .05 });
+  const seatMesh = new THREE.InstancedMesh(seatGeo, seatMat, seats.length);
+  const backMesh = new THREE.InstancedMesh(backGeo, seatMat, seats.length);
+  seatMesh.castShadow = backMesh.castShadow = true;
+  scene.add(seatMesh, backMesh);
+  // stepped benches under seats
+  ROWS.forEach((r, ri) => {
+    const h = .2 + ri*.28;
+    const shape = new THREE.Shape();
+    const w = .38;
+    shape.moveTo(r + w, -3.6); shape.lineTo(r + w, 2.4); shape.absarc(0, 2.4, r + w, 0, Math.PI, false);
+    shape.lineTo(-r - w, -3.6); shape.lineTo(-r + w, -3.6); shape.lineTo(-r + w, 2.4);
+    shape.absarc(0, 2.4, r - w, Math.PI, 0, true); shape.lineTo(r - w, -3.6); shape.closePath();
+    const g = new THREE.ExtrudeGeometry(shape, { depth: h, bevelEnabled: false, curveSegments: 48 });
+    const m = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ color: 0x1f4a36, roughness: .9 }));
+    m.rotation.x = Math.PI/2; m.position.y = h; m.receiveShadow = true; scene.add(m);
+  });
+
+  const COL = { L: new THREE.Color(0xd8343a), C: new THREE.Color(0x2f6fd1), X: new THREE.Color(0x8fa59a),
+    gold: new THREE.Color(0xe3b54a), white: new THREE.Color(0xf2efe6), dim: new THREE.Color(0x24382e) };
+
+  // ---------- the PM's chair ----------
+  const CHAIR = new THREE.Vector3(1.25, 0, -1.1);
+  const chair = new THREE.Group();
+  const chairMat = new THREE.MeshStandardMaterial({ color: 0xd8343a, emissive: 0xe3b54a, emissiveIntensity: .25, roughness: .4 });
+  const cSeat = new THREE.Mesh(new THREE.BoxGeometry(.7, .45, .65), chairMat); cSeat.position.y = .22;
+  const cBack = new THREE.Mesh(new THREE.BoxGeometry(.7, .9, .14), chairMat); cBack.position.set(0, .7, .28);
+  cSeat.castShadow = cBack.castShadow = true;
+  chair.add(cSeat, cBack); chair.position.copy(CHAIR); chair.rotation.y = -Math.PI/2; scene.add(chair);
+  const ghost = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(.7, 1.15, .65)),
+    new THREE.LineBasicMaterial({ color: 0xf2efe6, transparent: true, opacity: 0 }));
+  ghost.position.copy(CHAIR).add(new THREE.Vector3(0, .58, 0)); ghost.rotation.y = -Math.PI/2; scene.add(ghost);
+  const halo = new THREE.Mesh(new THREE.TorusGeometry(.75, .045, 16, 96), new THREE.MeshStandardMaterial({ color: 0xe3b54a, emissive: 0xe3b54a, emissiveIntensity: .9, metalness: .7, roughness: .25, transparent: true, opacity: 0 }));
+  halo.rotation.x = Math.PI/2; scene.add(halo);
+
+  // floating plaque (s44)
+  const plaqueCanvas = document.createElement('canvas'); plaqueCanvas.width = 512; plaqueCanvas.height = 320;
+  const plaqueTex = new THREE.CanvasTexture(plaqueCanvas); 
+  function drawPlaque() {
+    const c = plaqueCanvas.getContext('2d');
+    c.fillStyle = '#f2efe6'; c.fillRect(0, 0, 512, 320);
+    c.strokeStyle = '#0b1410'; c.lineWidth = 6; c.strokeRect(18, 18, 476, 284);
+    c.fillStyle = '#0b1410';
+    c.font = '500 26px "IBM Plex Mono", monospace'; c.fillText('COMMONWEALTH CONSTITUTION', 44, 74);
+    c.font = '800 132px "Bricolage Grotesque", "Arial Narrow", sans-serif'; c.fillText('s 44', 40, 210);
+    c.font = '400 26px "IBM Plex Mono", monospace'; c.fillText('Disqualification', 44, 268);
+    plaqueTex.needsUpdate = true;
+  }
+  drawPlaque();
+  (document.fonts && document.fonts.ready || Promise.resolve()).then(drawPlaque);
+  const plaque = new THREE.Mesh(new THREE.PlaneGeometry(.96, .6), new THREE.MeshBasicMaterial({ map: plaqueTex, transparent: true, opacity: 0, side: THREE.DoubleSide }));
+  scene.add(plaque);
+
+  // dust motes
+  const dustGeo = new THREE.BufferGeometry();
+  const dn = 260, dp = new Float32Array(dn*3);
+  for (let i = 0; i < dn; i++) { dp[i*3] = (rng()-.5)*20; dp[i*3+1] = rng()*9; dp[i*3+2] = (rng()-.5)*20; }
+  dustGeo.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0xe3b54a, size: .045, transparent: true, opacity: .45 }));
+  scene.add(dust);
+
+  // ---------- per-scene state ----------
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const CAMS = [
+    { a: [V(0, 17, 19), V(0, 0, 0)], b: [V(-2, 9, 13), V(0, .5, .5)] },
+    { a: [V(6.4, 3.2, 2.6), V(1.25, 1.1, -1.1)], b: [V(6, 4.6, 1.4), V(1.25, 2.5, -1.1)] },
+    { a: [V(10, 7, 5), V(3, .6, 0)], b: [V(8, 8.5, -3), V(2.5, .6, 1)] },
+    { a: [V(0, 18, 4), V(0, 0, .8)], b: [V(-4, 15, 9), V(0, 0, .8)] },
+    { a: [V(5.4, 2.8, 3), V(1.25, 1.3, -1.1)], b: [V(5.2, 2.7, 2.5), V(1.25, 1.4, -1.1)] },
+    { a: [V(-1.5, 1, 3.2), V(1.25, 1.4, -1.1)], b: [V(1.5, 4.8, 4.2), V(1.25, .8, -1.1)] },
+    { a: [V(0, 13, 15), V(0, 0, 0)], b: [V(11, 9, 11), V(0, 0, .5)] },
+  ];
+  function camFor(i, p) {
+    const c = CAMS[i], e = ease(p);
+    return [c.a[0].clone().lerp(c.b[0], e), c.a[1].clone().lerp(c.b[1], e)];
+  }
+
+  // returns { color, lift, scale } for one seat
+  const tmpC = new THREE.Color();
+  function seatState(s, i, p, T) {
+    const base = COL[s.party];
+    const out = { c: base.clone(), lift: 0, sc: 1, glow: 0 };
+    if (i === 0) {
+      const k = easeOut(clamp(T * .9 - s.delay * 1.6));
+      out.sc = k; out.lift = (1 - k) * -.6;
+    } else if (i === 1) {
+      out.c.lerp(COL.dim, .55);
+    } else if (i === 2) {
+      if (s.party === 'L') {
+        const lit = s.lorder < Math.floor(94 * .75 * clamp((p - .12) / .7));
+        out.c = lit ? COL.white.clone() : base.clone().lerp(COL.dim, .35);
+        out.lift = lit ? .12 + .05 * Math.sin(T * 6 + s.lorder) : 0; out.glow = lit ? .35 : 0;
+      } else out.c.lerp(COL.dim, .85);
+    } else if (i === 3) {
+      if (s.party !== 'L') { out.c = COL.gold.clone(); out.glow = .3; }
+      else {
+        const flip = s.lorder < Math.round(20 * clamp((p - .3) / .5));
+        out.c = flip ? COL.gold.clone() : base.clone().lerp(COL.dim, .3);
+        out.lift = flip ? .18 : 0; out.glow = flip ? .5 : 0;
+      }
+    } else if (i === 4 || i === 5) {
+      out.c.lerp(COL.dim, i === 4 ? .75 : .8);
+    }
+    return out;
+  }
+  function prevEnd(i) { return i > 0 ? i - 1 : 0; }
+
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), pos = new THREE.Vector3(), scl = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+  const bigEl = document.getElementById('big'), bigV = document.getElementById('bigv'), bigL = document.getElementById('bigl');
+  const cards = [...document.querySelectorAll('.card')];
+  const progress = document.getElementById('progress');
+  SCENES.forEach(() => { const s = document.createElement('span'); s.appendChild(document.createElement('b')); progress.appendChild(s); });
+  const bars = [...progress.querySelectorAll('b')];
+
+  function render(T) {
+    T = clamp(T, 0, DUR - 1e-3);
+    const i = sceneAt(T), S = SCENES[i], local = T - S.s, praw = clamp(local / (S.e - S.s));
+    const v = S.v, p = lerp(S.p0, S.p1, praw), P = i > 0 ? SCENES[i - 1] : S;
+    const blend = i > 0 ? ease(clamp(local / .6)) : 1;
+
+    // camera
+    let [cp, cl] = camFor(v, p);
+    if (blend < 1) { const [pp, pl] = camFor(P.v, P.p1); cp = pp.lerp(cp, blend); cl = pl.lerp(cl, blend); }
+    camera.position.copy(cp); camera.lookAt(cl);
+
+    // seats
+    seats.forEach((s, k) => {
+      let st = seatState(s, v, p, T);
+      if (blend < 1) {
+        const ps = seatState(s, P.v, P.p1, SCENES[i].s);
+        st.c = ps.c.lerp(st.c, blend); st.lift = lerp(ps.lift, st.lift, blend); st.sc = lerp(ps.sc, st.sc, blend);
+      }
+      pos.set(s.x, s.y + st.lift, s.z); q.setFromAxisAngle(up, s.rot); scl.setScalar(Math.max(.001, st.sc));
+      m4.compose(pos, q, scl);
+      seatMesh.setMatrixAt(k, m4); backMesh.setMatrixAt(k, m4);
+      seatMesh.setColorAt(k, st.c); backMesh.setColorAt(k, tmpC.copy(st.c).multiplyScalar(.82));
+    });
+    seatMesh.instanceMatrix.needsUpdate = backMesh.instanceMatrix.needsUpdate = true;
+    seatMesh.instanceColor.needsUpdate = backMesh.instanceColor.needsUpdate = true;
+
+    // chair, ghost, halo, plaque
+    let cy = 0, cOp = 1, cEm = .25, cCol = COL.L;
+    let gOp = 0, hOp = 0, hy = 3, plOp = 0;
+    if (v === 0) cEm = .25 + .35 * clamp((T - 2) / 2);
+    if (v === 1) {
+      cy = 3.2 * ease(clamp((p - .15) / .55)); cOp = 1 - clamp((p - .45) / .3); cEm = .6;
+      gOp = clamp((p - .6) / .25) * (.6 + .4 * Math.sin(T * 5));
+    }
+    if (v === 2 || v === 3) { cEm = .15; }
+    if (v === 4) {
+      cOp = 1 - .85 * clamp((p - .35) / .35); gOp = clamp((p - .35) / .3);
+      plOp = clamp((p - .1) / .2);
+    }
+    if (v === 5) {
+      hOp = clamp(p / .2); hy = lerp(3.4, .75, ease(clamp((p - .05) / .5)));
+      cCol = COL.L.clone().lerp(COL.dim, clamp((p - .45) / .3)); cEm = .1 + .6 * (1 - clamp((p - .45) / .3));
+    }
+    if (v === 6) cEm = .3;
+    // carry state across the cut
+    if (blend < 1 && v === 2) { cy = lerp(3.2, 0, blend); cOp = blend; }
+    if (blend < 1 && v === 5) { cOp = lerp(.15, 1, blend); }
+    if (blend < 1 && v === 6) { hOp = 1 - blend; hy = .75; cCol = COL.dim.clone().lerp(COL.L, blend); }
+    chair.position.set(CHAIR.x, cy, CHAIR.z);
+    chair.rotation.y = -Math.PI/2 + (v === 1 ? p * 1.4 * clamp((p - .15) / .5) : 0);
+    chairMat.transparent = cOp < 1; chairMat.opacity = cOp; chairMat.color.copy(cCol); chairMat.emissiveIntensity = cEm;
+    ghost.material.opacity = gOp;
+    halo.material.opacity = hOp; halo.position.set(CHAIR.x, hy, CHAIR.z); halo.rotation.z = T * .8;
+    plaque.material.opacity = plOp;
+    plaque.position.set(CHAIR.x, 2.02 + .06 * Math.sin(T * 1.6), CHAIR.z - .1);
+    plaque.lookAt(camera.position);
+    spot.position.set(CHAIR.x, 2.2, CHAIR.z + .4);
+    spot.intensity = v === 1 || v === 4 || v === 5 ? 2.2 : v === 0 ? 1.2 : .6;
+    ring.material.opacity = .25 + .15 * Math.sin(T * 1.2);
+    dust.rotation.y = T * .03;
+    renderer.render(scene, camera);
+
+    // DOM
+    cards.forEach((c, k) => {
+      let o = 0, y = 0;
+      if (k === i) {
+        const inP = k === 0 ? 1 : easeOut(clamp((local - .15) / .4));
+        const outP = k === SCENES.length - 1 ? 0 : clamp((S.e - T - .02) / .3);
+        o = Math.min(inP, k === SCENES.length - 1 ? 1 : outP);
+        y = (1 - inP) * 4;
+      }
+      c.style.opacity = o.toFixed(3);
+      c.style.transform = `translateY(${y.toFixed(2)}cqh)`;
+      c.style.visibility = o > 0.001 ? 'visible' : 'hidden';
+    });
+    bars.forEach((b, k) => { b.style.width = (k < i ? 100 : k === i ? praw * 100 : 0) + '%'; });
+
+    // big number
+    let bo = 0, bv = '', bl = '';
+    const fadeIn = clamp((local - .6) / .5), fadeOut = clamp((S.e - T) / .4);
+    bigEl.style.opacity = (bo * Math.min(fadeIn, fadeOut)).toFixed(3);
+    if (bv !== '') bigV.textContent = bv; if (bl) bigL.textContent = bl;
+    document.getElementById('follow').style.opacity = (i === 6 ? clamp((T - 21.4) / .4) : 0).toFixed(3);
+    bigV.style.color = v === 3 && T > S.s + (S.e - S.s) * .8 ? 'var(--gold)' : 'var(--ink)';
+  }
+
+  // ---------- sizing ----------
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.setViewOffset(w, h, 0, h * .12, w, h); // lift the chamber into the open band above the captions
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(() => { resize(); render(t); }).observe(stage);
+
+  // ---------- playback ----------
+  let t = 0, playing = !RECORD, last = performance.now();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const playBtn = document.getElementById('play');
+  const chips = document.getElementById('chips');
+  ['Intro', '1', '2', '3', '4', '5', 'End'].forEach((label, k) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = label;
+    b.setAttribute('aria-label', 'Jump to ' + (k === 0 ? 'intro' : k === 6 ? 'summary' : 'route ' + k));
+    b.onclick = () => { t = SCENES[k].s + (k ? 1.2 : 0); render(t); };
+    chips.appendChild(b);
+  });
+  function setPlaying(v) { playing = v; playBtn.textContent = v ? 'Pause' : 'Play'; playBtn.setAttribute('aria-pressed', String(v)); last = performance.now(); }
+  playBtn.onclick = () => setPlaying(!playing);
+  document.getElementById('restart').onclick = () => { t = 0; setPlaying(true); };
+  if (reduce && !RECORD) setPlaying(false);
+
+  function loop(now) {
+    const dt = Math.min(.1, (now - last) / 1000); last = now;
+    if (playing) { t += dt; if (t >= DUR) t = 0; render(t); }
+    requestAnimationFrame(loop);
+  }
+  resize(); render(reduce ? SCENES[0].e - .5 : 0);
+  if (!RECORD) requestAnimationFrame(loop);
+  window.__render = T => { render(T); };
+  window.__DUR = DUR;
+})();
+</script>
