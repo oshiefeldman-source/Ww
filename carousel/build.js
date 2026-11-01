@@ -6,8 +6,9 @@ const font = (fam, w, file) => `@font-face{font-family:"${fam}";font-weight:${w}
 const css = [400,500,700,800].map(w => font('B', w, glob('bricolage', `bricolage-grotesque-latin-${w}-normal.woff2`))).join('') + [400,500].map(w => font('M', w, glob('plex', `ibm-plex-mono-latin-${w}-normal.woff2`))).join('');
 const N = 8;
 const photo = 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__dirname, 'photos/albanese-grin.jpg')).toString('base64');
-const chrome = (i, dark = true) => `<div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
-<div class="ft"><span>${i}/${N}</span><span>${i < N ? 'Swipe →' : 'Opinion · Source: ABC News, 1 Nov 2026'}</span></div>`;
+const SRC = {1: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM.", 2: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (rate rise “widely anticipated”; leaders’ cricket match at Viv Richards Stadium).", 3: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Albanese’s stated agenda; reparations raised by Caribbean and African leaders).", 4: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Republic: Albanese created an Assistant Minister for the Republic role in 2022.", 5: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (visa numbers, 2021 UK trade deal, rural labour shortages).", 6: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Chinese-funded port, airport and stadium; US$340m US pledge).", 7: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (COP31, APEC, G20 and East Asia Summit all in November).", 8: "Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026."};
+const chrome = (i, dark = true) => `<div class="srcl">${SRC[i]}</div><div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
+<div class="ft"><span>${i}/${N}</span><span>${i < N ? 'Swipe →' : ''}</span></div>`;
 const slides = [
 // 1 cover: boarding pass
 `<div class="s cover"><div class="photo" style="background-image:url(${photo})"></div>${chrome(1)}
@@ -24,8 +25,8 @@ const slides = [
 `<div class="s red">${chrome(2)}
  <div class="kick">His week vs your week</div>
  <div class="cal"><div class="day"><small>Sun 1 Nov</small><b>Leaders' cricket match</b><span>Viv Richards Stadium, Antigua. He'll be there.</span></div>
- <div class="day hot"><small>Tue 3 Nov</small><b>Interest rate rise expected</b><span>Back home. Colleagues left to face the fallout.</span></div></div>
- <h2>You get the rate rise. <em>He gets the cricket.</em></h2></div>`,
+ <div class="day hot"><small>Tue 3 Nov</small><b>Interest rate rise likely</b><span>Back home. Colleagues left to face the fallout.</span></div></div>
+ <h2>You likely get a rate rise. <em>He gets the cricket.</em></h2></div>`,
 // 3 agenda
 `<div class="s">${chrome(3)}
  <div class="kick">On the table at CHOGM</div>
@@ -37,7 +38,7 @@ const slides = [
  <blockquote>He says he's there at the <em>personal request of King Charles.</em></blockquote>
  <p class="punch small">A prime minister who wants Australia to become a republic, flying across the world because the King asked him to.</p></div>`,
 // 5 backpackers
-`<div class="s">${chrome(5)}
+`<div class="s tight">${chrome(5)}
  <div class="kick">His gift to the UK</div>
  <h2>British backpackers <em>won't have to work</em> in the regions.</h2>
  <dl class="facts"><dt>UK visas</dt><dd>About 80,000 a year, nearly double since the 2021 trade deal</dd><dt>The cost</dt><dd>The deal is partly blamed for rural labour shortages</dd></dl>
@@ -105,7 +106,9 @@ blockquote{margin:0;font-size:92px;font-weight:800;line-height:.98;letter-spacin
 .bills li{position:relative;font-size:64px;font-weight:800;background:rgba(242,239,230,.06);border:2px solid rgba(255,122,110,.4);border-radius:22px;padding:26px 34px}
 .bills s{position:absolute;right:30px;top:50%;width:46px;height:46px;margin-top:-23px;background:#ff7a6e;clip-path:polygon(50% 0,100% 60%,68% 60%,68% 100%,32% 100%,32% 60%,0 60%)}
 .pass b.r{color:var(--red)}
-.cover{justify-content:flex-end;padding-bottom:150px;gap:30px}
+.tight{gap:32px}.tight h2{font-size:88px}.tight .facts{font-size:38px;gap:22px 30px;margin-top:0}.tight .facts dt,.tight .facts dd{padding-top:18px}.tight .punch{font-size:56px}
+.srcl{position:absolute;left:96px;right:96px;bottom:110px;font:400 19px/1.45 M,monospace;color:var(--dim);border-top:1px solid rgba(242,239,230,.15);padding-top:14px;z-index:2}
+.cover{justify-content:flex-end;padding-bottom:215px;gap:30px}
 .cover .photo{position:absolute;left:0;right:0;top:0;height:900px;background-size:cover;background-position:50% 18%;filter:saturate(1.05) contrast(1.05);-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 96%);mask-image:linear-gradient(180deg,#000 45%,transparent 96%)}
 .cover .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,20,16,.75) 0%,rgba(11,20,16,0) 16%,rgba(11,20,16,0) 34%,rgba(11,20,16,.7) 62%,rgba(11,20,16,.85) 100%)}
 .cover .hd,.cover .ft,.cover .kick,.cover h1,.cover .pass,.cover .note{position:relative;z-index:1}
