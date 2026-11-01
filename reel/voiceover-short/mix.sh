@@ -4,8 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 VIDEO=../five-ways-out-short.mp4
 OUT=../five-ways-out-short-vo.mp4
-STARTS=(0.0 3.05 6.55 10.05 13.55 17.05 20.6)
-MAXLEN=(3.0 3.4 3.4 3.4 3.4 3.4 4.2)
+STARTS=(0.0 3.05 6.55 10.05 13.55 16.9 20.6)
+MAXLEN=(3.0 3.4 3.4 3.4 3.4 3.65 4.2)
 
 inputs=(-i "$VIDEO"); filters=""; labels=""
 for k in 0 1 2 3 4 5 6; do
