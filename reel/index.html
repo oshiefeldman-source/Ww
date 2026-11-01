@@ -64,13 +64,7 @@ h1 em, h2 em { font-style: normal; color: var(--gold); }
 .meta { display: grid; grid-template-columns: auto 1fr; gap: 1cqh 3cqw; font-size: 3.3cqw; border-top: 1px solid rgba(242,239,230,.18); padding-top: 1.8cqh; }
 .meta dt { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); padding-top: .4cqh; }
 .meta dd { margin: 0; color: var(--ink); line-height: 1.3; }
-.photo { position: absolute; top: 10.5cqh; width: 80cqw; aspect-ratio: 3 / 2; max-width: 100%; opacity: 0; visibility: hidden;
-  border-radius: 1.4cqw; overflow: hidden; transform-style: preserve-3d; will-change: transform, opacity;
-  box-shadow: 0 3cqw 8cqw rgba(0,0,0,.6), 0 0 0 1px rgba(227,181,74,.45); background: var(--field); }
-.photo.l { left: 5cqw; } .photo.r { right: 5cqw; }
-.photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(.92) contrast(1.06); will-change: transform; }
-.photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(11,20,16,0) 55%, rgba(11,20,16,.55) 100%); }
-.big { position: absolute; right: 6cqw; top: 31cqh; z-index: 2; text-align: right; opacity: 0; font-variant-numeric: tabular-nums; text-shadow: 0 2px 18px rgba(11,20,16,.9), 0 0 4px rgba(11,20,16,.8); }
+.big { position: absolute; right: 6cqw; top: 13cqh; text-align: right; opacity: 0; font-variant-numeric: tabular-nums; text-shadow: 0 2px 18px rgba(11,20,16,.9), 0 0 4px rgba(11,20,16,.8); }
 .big .v { font-size: 19cqw; font-weight: 800; line-height: .9; letter-spacing: -.04em; }
 .big .l { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); max-width: 40cqw; margin-left: auto; margin-top: 1cqh; }
 .legend { display: flex; gap: 4cqw; font-family: var(--mono); font-size: 2.6cqw; color: var(--ink-dim); letter-spacing: .08em; }
@@ -98,12 +92,6 @@ body.record .controls { display: none; }
 <div class="stage" id="stage">
   <canvas id="gl" aria-hidden="true"></canvas>
   <div class="vignette"></div>
-  <figure class="photo l" data-photo="0" style="margin:0"><img src="photos/s0.jpg" alt="Anthony Albanese smiling in a crowd" style="object-position:50% 28%"></figure>
-  <figure class="photo r" data-photo="1" style="margin:0"><img src="photos/s1.jpg" alt="Albanese at a podium" style="object-position:42% 35%"></figure>
-  <figure class="photo l" data-photo="2" style="margin:0"><img src="photos/s2.jpg" alt="Albanese speaking in the House with colleagues behind" style="object-position:45% 50%"></figure>
-  <figure class="photo r" data-photo="3" style="margin:0"><img src="photos/s3.jpg" alt="Albanese seated in the House, hand to chin" style="object-position:52% 32%"></figure>
-  <figure class="photo l" data-photo="4" style="margin:0"><img src="photos/s4.jpg" alt="Albanese gesturing as he speaks" style="object-position:42% 40%"></figure>
-  <figure class="photo r" data-photo="5" style="margin:0"><img src="photos/s5.jpg" alt="Albanese in the House of Representatives" style="object-position:50% 35%"></figure>
   <div class="progress" id="progress"></div>
   <div class="top"><span class="mark"><i></i>Canberra explainer</span><span id="clock">150 seats</span></div>
 
@@ -374,7 +362,6 @@ body.record .controls { display: none; }
   const progress = document.getElementById('progress');
   SCENES.forEach(() => { const s = document.createElement('span'); s.appendChild(document.createElement('b')); progress.appendChild(s); });
   const bars = [...progress.querySelectorAll('b')];
-  const photos = [...document.querySelectorAll('.photo')];
 
   function render(T) {
     T = clamp(T, 0, DUR - 1e-3);
@@ -450,22 +437,6 @@ body.record .controls { display: none; }
       c.style.transform = `translateY(${y.toFixed(2)}cqh)`;
       c.style.visibility = o > 0.001 ? 'visible' : 'hidden';
     });
-    photos.forEach((ph, k) => {
-      let o = 0;
-      if (k === i) {
-        const inP = k === 0 ? 1 : easeOut(clamp((local - .25) / .8));
-        const outP = clamp((S.e - T - .05) / .45);
-        o = Math.min(inP, outP);
-        const dir = ph.classList.contains('l') ? 1 : -1;
-        const ry = dir * lerp(16, 5, ease(p)) * 1 + dir * (1 - inP) * 20;
-        const rx = lerp(6, 2, ease(p));
-        const y = (1 - inP) * -3 + Math.sin(T * 1.3) * .35;
-        ph.style.transform = `translateY(${y.toFixed(2)}cqh) rotateY(${ry.toFixed(2)}deg) rotateX(${rx.toFixed(2)}deg)`;
-        ph.firstChild.style.transform = `scale(${lerp(1.14, 1.02, p).toFixed(4)}) translateX(${(dir * lerp(-1.5, 1.5, p)).toFixed(2)}%)`;
-      }
-      ph.style.opacity = o.toFixed(3);
-      ph.style.visibility = o > 0.001 ? 'visible' : 'hidden';
-    });
     bars.forEach((b, k) => { b.style.width = (k < i ? 100 : k === i ? p * 100 : 0) + '%'; });
 
     // big number
@@ -483,7 +454,6 @@ body.record .controls { display: none; }
   function resize() {
     const w = stage.clientWidth, h = stage.clientHeight;
     renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
-    stage.style.perspective = (w * 1.8).toFixed(0) + 'px';
   }
   new ResizeObserver(() => { resize(); render(t); }).observe(stage);
 
