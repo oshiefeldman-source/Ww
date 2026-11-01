@@ -94,6 +94,16 @@ blockquote{margin:0;font-size:92px;font-weight:800;line-height:.98;letter-spacin
 .tease i{font-style:normal;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--f);color:var(--gold);font-size:34px;line-height:1}
 .red .tease{background:#ff7a6e}.red .tease i{color:#ff7a6e}
 .t2{gap:32px}.t2 .cal{gap:20px}.t2 .day{padding:26px 36px}.t2 .day b{font-size:56px}.t2 h2{font-size:90px}
+.one{justify-content:flex-end;padding-bottom:228px;gap:24px}
+.one .photo{position:absolute;left:0;right:0;top:0;height:760px;background-size:cover;background-position:50% 16%;filter:saturate(1.05) contrast(1.05);-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 98%);mask-image:linear-gradient(180deg,#000 45%,transparent 98%)}
+.one .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,20,16,.75) 0%,rgba(11,20,16,0) 16%,rgba(11,20,16,0) 34%,rgba(11,20,16,.75) 70%,rgba(11,20,16,.9) 100%)}
+.one>*:not(.photo){position:relative;z-index:1}.one .hd,.one .ft,.one .srcl{position:absolute}
+.one .kick.big{font:800 62px B,sans-serif;letter-spacing:-.02em;text-transform:none;color:var(--ink);line-height:1;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.one h1{font-size:112px;margin-bottom:8px;text-shadow:0 6px 30px rgba(0,0,0,.5)}
+.one .cal{flex-direction:row;gap:20px}.one .day{flex:1;padding:24px 28px;gap:8px}
+.one .day small{font-size:20px}.one .day b{font-size:44px}.one .day span{font-size:26px}
+.one .day:not(.hot){background:rgba(11,20,16,.75);backdrop-filter:blur(6px)}
+.one .ft{font-size:22px}.one .ft span:last-child{color:var(--gold)}
 .srcl{position:absolute;left:96px;right:96px;bottom:110px;font:400 19px/1.45 M,monospace;color:var(--dim);border-top:1px solid rgba(242,239,230,.15);padding-top:14px;z-index:2}
 .cover{justify-content:flex-end;padding-bottom:300px;gap:30px}
 .cover .photo{position:absolute;left:0;right:0;top:0;height:900px;background-size:cover;background-position:50% 18%;filter:saturate(1.05) contrast(1.05);-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 96%);mask-image:linear-gradient(180deg,#000 45%,transparent 96%)}
@@ -120,6 +130,16 @@ blockquote{margin:0;font-size:92px;font-weight:800;line-height:.98;letter-spacin
 .follow{align-self:flex-start;font-size:68px;font-weight:800;color:var(--f);background:var(--gold);border-radius:24px;padding:12px 40px 20px;letter-spacing:-.02em}
 .follow span{font-weight:500}
 `;
+
+// single 4:5 graphic for X / Facebook
+const single = `<div class="s one"><div class="photo" style="background-image:url(${photo})"></div>
+ <div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
+ <div class="kick big">Rates likely go up Tuesday.</div>
+ <h1>Albo's in <em>the Caribbean.</em></h1>
+ <div class="cal"><div class="day"><small>Sun 1 Nov · Antigua</small><b>Leaders' cricket match</b><span>He'll be there.</span></div>
+ <div class="day hot"><small>Tue 3 Nov · Back home</small><b>Interest rate rise likely</b><span>Colleagues left to face the fallout.</span></div></div>
+ <div class="srcl">Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM.</div>
+ <div class="ft"><span>CHOGM 2026</span><span>Should he be home? Comment below</span></div></div>`;
 (async () => {
   const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1080, height: 1350 } });
   for (let i = 0; i < slides.length; i++) {
@@ -127,5 +147,8 @@ blockquote{margin:0;font-size:92px;font-weight:800;line-height:.98;letter-spacin
     await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(150);
     await p.locator('.s').screenshot({ path: `${OUT}/slide-${i + 1}.png` });
   }
+  await p.setContent(`<!doctype html><meta charset="utf-8"><style>${style}</style>${single}`);
+  await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(150);
+  await p.locator('.s').screenshot({ path: `${OUT}/single-4x5.png` });
   await b.close();
 })();
