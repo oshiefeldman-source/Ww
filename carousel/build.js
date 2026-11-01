@@ -4,9 +4,9 @@ const S = process.argv[2], OUT = '/home/user/Ww/carousel', F = S + '/fonts';
 const glob = (d, f) => path.join(F, fs.readdirSync(F).find(x => x.includes(d)), 'package/files', f);
 const font = (fam, w, file) => `@font-face{font-family:"${fam}";font-weight:${w};src:url(data:font/woff2;base64,${fs.readFileSync(file).toString('base64')}) format("woff2")}`;
 const css = [400,500,700,800].map(w => font('B', w, glob('bricolage', `bricolage-grotesque-latin-${w}-normal.woff2`))).join('') + [400,500].map(w => font('M', w, glob('plex', `ibm-plex-mono-latin-${w}-normal.woff2`))).join('');
-const N = 6;
+const N = 5;
 const photo = 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__dirname, 'photos/albanese-grin.jpg')).toString('base64');
-const SRC = {"1": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM.", "2": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (rate rise “widely anticipated”; leaders’ cricket match at Viv Richards Stadium).", "3": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Albanese’s stated agenda; reparations raised by Caribbean and African leaders).", "4": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (visa numbers, 2021 UK trade deal, rural labour shortages).", "5": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Chinese-funded port, airport and stadium; US$340m US pledge).", "6": "Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026."};
+const SRC = {"1": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM.", "2": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (rate rise “widely anticipated”; leaders’ cricket match at Viv Richards Stadium).", "3": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Albanese’s stated agenda; reparations raised by Caribbean and African leaders).", "4": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (visa numbers, 2021 UK trade deal, rural labour shortages).", "5": "Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026."};
 const chrome = (i, dark = true) => `<div class="srcl">${SRC[i]}</div><div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
 <div class="ft"><span>${i}/${N}</span><span>${i < N ? 'Swipe →' : ''}</span></div>`;
 const slides = [
@@ -38,13 +38,8 @@ const slides = [
  <h2>British backpackers <em>won't have to work</em> in the regions.</h2>
  <dl class="facts"><dt>UK visas</dt><dd>About 80,000 a year, nearly double since the 2021 trade deal</dd><dt>The cost</dt><dd>The deal is partly blamed for rural labour shortages</dd></dl>
  <p class="punch">Good news for London. <em>What about the farms?</em></p></div>`,
-// 6 china
-`<div class="s">${chrome(5)}
- <div class="kick">Who built the venue</div>
- <h2>The port. The airport. The cricket stadium. <em>China paid for them.</em></h2>
- <p class="punch small">Beijing has poured billions into the Caribbean. Washington just pledged US$340 million. Australia is sending a prime minister to the cricket.</p></div>`,
 // 8 cta
-`<div class="s cta">${chrome(6)}
+`<div class="s cta">${chrome(5)}
  <div class="kick">Your call</div>
  <h2>Likely rate rise week. Should the PM be <em>at home?</em></h2>
  <div class="vote"><div>🏠 <b>Stay home</b><small>Comment HOME</small></div><div>🌏 <b>Go global</b><small>Comment WORLD</small></div></div>
