@@ -5,11 +5,12 @@ const glob = (d, f) => path.join(F, fs.readdirSync(F).find(x => x.includes(d)), 
 const font = (fam, w, file) => `@font-face{font-family:"${fam}";font-weight:${w};src:url(data:font/woff2;base64,${fs.readFileSync(file).toString('base64')}) format("woff2")}`;
 const css = [400,500,700,800].map(w => font('B', w, glob('bricolage', `bricolage-grotesque-latin-${w}-normal.woff2`))).join('') + [400,500].map(w => font('M', w, glob('plex', `ibm-plex-mono-latin-${w}-normal.woff2`))).join('');
 const N = 8;
+const photo = 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__dirname, 'photos/albanese-grin.jpg')).toString('base64');
 const chrome = (i, dark = true) => `<div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
 <div class="ft"><span>${i}/${N}</span><span>${i < N ? 'Swipe →' : 'Opinion · Source: ABC News, 1 Nov 2026'}</span></div>`;
 const slides = [
 // 1 cover: boarding pass
-`<div class="s cover">${chrome(1)}
+`<div class="s cover"><div class="photo" style="background-image:url(${photo})"></div>${chrome(1)}
  <div class="kick">Rates go up Tuesday</div>
  <h1>Albo's in <em>the Caribbean.</em></h1>
  <div class="pass">
@@ -18,7 +19,7 @@ const slides = [
    <div class="row g"><div><small>Event</small><b>CHOGM</b></div><div><small>Opens</small><b>SUN 1 NOV</b></div><div><small>Rate day</small><b class="r">TUE 3 NOV</b></div><div><small>Class</small><b>VIP</b></div></div></div>
   <div class="stub"><small>Seat</small><big>1A</big><div class="bars"></div></div>
  </div>
- <div class="note">Illustration</div></div>`,
+ <div class="note">Boarding pass is an illustration</div></div>`,
 // 2 the week
 `<div class="s red">${chrome(2)}
  <div class="kick">His week vs your week</div>
@@ -104,6 +105,14 @@ blockquote{margin:0;font-size:92px;font-weight:800;line-height:.98;letter-spacin
 .bills li{position:relative;font-size:64px;font-weight:800;background:rgba(242,239,230,.06);border:2px solid rgba(255,122,110,.4);border-radius:22px;padding:26px 34px}
 .bills s{position:absolute;right:30px;top:50%;width:46px;height:46px;margin-top:-23px;background:#ff7a6e;clip-path:polygon(50% 0,100% 60%,68% 60%,68% 100%,32% 100%,32% 60%,0 60%)}
 .pass b.r{color:var(--red)}
+.cover{justify-content:flex-end;padding-bottom:150px;gap:30px}
+.cover .photo{position:absolute;left:0;right:0;top:0;height:900px;background-size:cover;background-position:50% 18%;filter:saturate(1.05) contrast(1.05);-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 96%);mask-image:linear-gradient(180deg,#000 45%,transparent 96%)}
+.cover .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,20,16,.75) 0%,rgba(11,20,16,0) 16%,rgba(11,20,16,0) 34%,rgba(11,20,16,.7) 62%,rgba(11,20,16,.85) 100%)}
+.cover .hd,.cover .ft,.cover .kick,.cover h1,.cover .pass,.cover .note{position:relative;z-index:1}
+.cover .hd{position:absolute}.cover .ft{position:absolute}
+.cover h1{font-size:118px}
+.cover .pass{transform:rotate(-3deg) scale(.86);transform-origin:left center;margin:-20px 0 -30px}
+.cover .route big{font-size:104px}
 .cal{display:flex;flex-direction:column;gap:26px}
 .day{background:rgba(242,239,230,.07);border:2px solid rgba(242,239,230,.22);border-radius:28px;padding:34px 40px;display:flex;flex-direction:column;gap:10px}
 .day small{font:500 26px M,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
