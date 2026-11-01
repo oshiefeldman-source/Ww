@@ -58,7 +58,7 @@ const slides = [
 // 8 cta
 `<div class="s cta">${chrome(8)}
  <div class="kick">Your call</div>
- <h2>Rate rise week. Should the PM be <em>at home?</em></h2>
+ <h2>Possible rate rise week. Should the PM be <em>at home?</em></h2>
  <div class="vote"><div>🏠 <b>Stay home</b><small>Comment HOME</small></div><div>🌏 <b>Go global</b><small>Comment WORLD</small></div></div>
  <div class="follow"><span>Follow</span> @osherfeldman</div></div>`,
 ];
