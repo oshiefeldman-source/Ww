@@ -4,9 +4,9 @@ const S = process.argv[2], OUT = '/home/user/Ww/carousel', F = S + '/fonts';
 const glob = (d, f) => path.join(F, fs.readdirSync(F).find(x => x.includes(d)), 'package/files', f);
 const font = (fam, w, file) => `@font-face{font-family:"${fam}";font-weight:${w};src:url(data:font/woff2;base64,${fs.readFileSync(file).toString('base64')}) format("woff2")}`;
 const css = [400,500,700,800].map(w => font('B', w, glob('bricolage', `bricolage-grotesque-latin-${w}-normal.woff2`))).join('') + [400,500].map(w => font('M', w, glob('plex', `ibm-plex-mono-latin-${w}-normal.woff2`))).join('');
-const N = 8;
+const N = 6;
 const photo = 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__dirname, 'photos/albanese-grin.jpg')).toString('base64');
-const SRC = {1: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM.", 2: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (rate rise “widely anticipated”; leaders’ cricket match at Viv Richards Stadium).", 3: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Albanese’s stated agenda; reparations raised by Caribbean and African leaders).", 4: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Republic: Albanese created an Assistant Minister for the Republic role in 2022.", 5: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (visa numbers, 2021 UK trade deal, rural labour shortages).", 6: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Chinese-funded port, airport and stadium; US$340m US pledge).", 7: "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (COP31, APEC, G20 and East Asia Summit all in November).", 8: "Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026."};
+const SRC = {"1": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM.", "2": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (rate rise “widely anticipated”; leaders’ cricket match at Viv Richards Stadium).", "3": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Albanese’s stated agenda; reparations raised by Caribbean and African leaders).", "4": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (visa numbers, 2021 UK trade deal, rural labour shortages).", "5": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Chinese-funded port, airport and stadium; US$340m US pledge).", "6": "Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026."};
 const chrome = (i, dark = true) => `<div class="srcl">${SRC[i]}</div><div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
 <div class="ft"><span>${i}/${N}</span><span>${i < N ? 'Swipe →' : ''}</span></div>`;
 const slides = [
@@ -32,31 +32,19 @@ const slides = [
  <div class="kick">On the table at CHOGM</div>
  <ul class="chips"><li>Climate change</li><li>Our oceans</li><li>Trade and investment</li><li>The rise of AI</li><li>A UN Security Council seat</li><li class="hot">Reparations for slavery</li></ul>
  <p class="punch">Missing from the list: <em>your mortgage.</em></p></div>`,
-// 4 why
-`<div class="s">${chrome(4)}
- <div class="kick">His reason for going</div>
- <blockquote>He says he's there at the <em>personal request of King Charles.</em></blockquote>
- <p class="punch small">A prime minister who wants Australia to become a republic, flying across the world because the King asked him to.</p></div>`,
 // 5 backpackers
-`<div class="s tight">${chrome(5)}
+`<div class="s tight">${chrome(4)}
  <div class="kick">His gift to the UK</div>
  <h2>British backpackers <em>won't have to work</em> in the regions.</h2>
  <dl class="facts"><dt>UK visas</dt><dd>About 80,000 a year, nearly double since the 2021 trade deal</dd><dt>The cost</dt><dd>The deal is partly blamed for rural labour shortages</dd></dl>
  <p class="punch">Good news for London. <em>What about the farms?</em></p></div>`,
 // 6 china
-`<div class="s">${chrome(6)}
+`<div class="s">${chrome(5)}
  <div class="kick">Who built the venue</div>
  <h2>The port. The airport. The cricket stadium. <em>China paid for them.</em></h2>
- <p class="punch small">Beijing has poured billions into the Caribbean. Washington just pledged US$340 million. Australia is sending a prime minister to watch the cricket.</p></div>`,
-// 7 november
-`<div class="s">${chrome(7)}
- <div class="kick">And that's just the start</div>
- <h2>Next up: <em>summit season.</em></h2>
- <p class="src">All in November:</p>
- <ul class="trips"><li>COP31</li><li>APEC</li><li>G20</li><li>East Asia Summit</li></ul>
- <p class="punch">How many days will he spend <em>in Australia</em> this month?</p></div>`,
+ <p class="punch small">Beijing has poured billions into the Caribbean. Washington just pledged US$340 million. Australia is sending a prime minister to the cricket.</p></div>`,
 // 8 cta
-`<div class="s cta">${chrome(8)}
+`<div class="s cta">${chrome(6)}
  <div class="kick">Your call</div>
  <h2>Likely rate rise week. Should the PM be <em>at home?</em></h2>
  <div class="vote"><div>🏠 <b>Stay home</b><small>Comment HOME</small></div><div>🌏 <b>Go global</b><small>Comment WORLD</small></div></div>
