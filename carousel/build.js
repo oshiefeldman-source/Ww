@@ -11,7 +11,7 @@ const chrome = (i, dark = true) => `<div class="hd"><span><i></i>Canberra explai
 const slides = [
 // 1 cover: boarding pass
 `<div class="s cover"><div class="photo" style="background-image:url(${photo})"></div>${chrome(1)}
- <div class="kick">Rates go up Tuesday</div>
+ <div class="kick big">Rates likely go up Tuesday.</div>
  <h1>Albo's in <em>the Caribbean.</em></h1>
  <div class="pass">
   <div class="pl"><div class="row"><div><small>Passenger</small><b>ALBANESE / ANTHONY MR</b></div></div>
@@ -111,6 +111,7 @@ blockquote{margin:0;font-size:92px;font-weight:800;line-height:.98;letter-spacin
 .cover .hd,.cover .ft,.cover .kick,.cover h1,.cover .pass,.cover .note{position:relative;z-index:1}
 .cover .hd{position:absolute}.cover .ft{position:absolute}
 .cover h1{font-size:118px}
+.cover .kick.big{font:800 66px B,sans-serif;letter-spacing:-.02em;text-transform:none;color:var(--ink);line-height:1;margin-bottom:-6px;text-shadow:0 4px 24px rgba(0,0,0,.6)}
 .cover .pass{transform:rotate(-3deg) scale(.86);transform-origin:left center;margin:-20px 0 -30px}
 .cover .route big{font-size:104px}
 .cal{display:flex;flex-direction:column;gap:26px}
