@@ -6,9 +6,10 @@ const font = (fam, w, file) => `@font-face{font-family:"${fam}";font-weight:${w}
 const css = [400,500,700,800].map(w => font('B', w, glob('bricolage', `bricolage-grotesque-latin-${w}-normal.woff2`))).join('') + [400,500].map(w => font('M', w, glob('plex', `ibm-plex-mono-latin-${w}-normal.woff2`))).join('');
 const N = 5;
 const photo = 'data:image/jpeg;base64,' + fs.readFileSync(path.join(__dirname, 'photos/albanese-grin.jpg')).toString('base64');
-const SRC = {"1": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM.", "2": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (rate rise “widely anticipated”; leaders’ cricket match at Viv Richards Stadium).", "3": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Albanese’s stated agenda; reparations raised by Caribbean and African leaders).", "4": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (visa numbers, 2021 UK trade deal, rural labour shortages).", "5": "Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026."};
-const chrome = (i, dark = true) => `<div class="srcl">${SRC[i]}</div><div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
-<div class="ft"><span>${i}/${N}</span><span>${i < N ? 'Swipe →' : ''}</span></div>`;
+const SRC = {"1": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026. Photo: file image, not taken at CHOGM. Boarding pass is an illustration.", "2": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (rate rise “widely anticipated”; leaders’ cricket match at Viv Richards Stadium).", "3": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (Albanese’s stated agenda; reparations raised by Caribbean and African leaders).", "4": "Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026 (visa numbers, 2021 UK trade deal, rural labour shortages).", "5": "Opinion. Source: ABC News, “Cricket, climate and colonialism on agenda as Commonwealth leaders meet in Caribbean”, 1 Nov 2026."};
+const TEASE = {1: "Wait till you see his week", 2: "So what's he actually there for?", 3: "Plus a gift for the Brits", 4: "So, should he be here?"};
+const chrome = (i, dark = true) => `${TEASE[i] ? `<div class="tease">${TEASE[i]}<i>→</i></div>` : ''}<div class="srcl">${SRC[i]}</div><div class="hd"><span><i></i>Canberra explained</span><span class="h">@osherfeldman</span></div>
+<div class="ft"><span>${i}/${N}</span><span></span></div>`;
 const slides = [
 // 1 cover: boarding pass
 `<div class="s cover"><div class="photo" style="background-image:url(${photo})"></div>${chrome(1)}
@@ -19,10 +20,9 @@ const slides = [
    <div class="route"><div><big>CBR</big><small>Canberra</small></div><div class="plane">✈</div><div><big>ANU</big><small>Antigua</small></div></div>
    <div class="row g"><div><small>Event</small><b>CHOGM</b></div><div><small>Opens</small><b>SUN 1 NOV</b></div><div><small>Rate day</small><b class="r">TUE 3 NOV</b></div><div><small>Class</small><b>VIP</b></div></div></div>
   <div class="stub"><small>Seat</small><big>1A</big><div class="bars"></div></div>
- </div>
- <div class="note">Boarding pass is an illustration</div></div>`,
+ </div></div>`,
 // 2 the week
-`<div class="s red">${chrome(2)}
+`<div class="s red t2">${chrome(2)}
  <div class="kick">His week vs your week</div>
  <div class="cal"><div class="day"><small>Sun 1 Nov</small><b>Leaders' cricket match</b><span>Viv Richards Stadium, Antigua. He'll be there.</span></div>
  <div class="day hot"><small>Tue 3 Nov</small><b>Interest rate rise likely</b><span>Back home. Colleagues left to face the fallout.</span></div></div>
@@ -90,8 +90,12 @@ blockquote{margin:0;font-size:92px;font-weight:800;line-height:.98;letter-spacin
 .bills s{position:absolute;right:30px;top:50%;width:46px;height:46px;margin-top:-23px;background:#ff7a6e;clip-path:polygon(50% 0,100% 60%,68% 60%,68% 100%,32% 100%,32% 60%,0 60%)}
 .pass b.r{color:var(--red)}
 .tight{gap:32px}.tight h2{font-size:88px}.tight .facts{font-size:38px;gap:22px 30px;margin-top:0}.tight .facts dt,.tight .facts dd{padding-top:18px}.tight .punch{font-size:56px}
+.tease{position:absolute;right:96px;bottom:205px;z-index:3;display:flex;align-items:center;gap:18px;font:700 40px B,sans-serif;letter-spacing:-.01em;color:var(--f);background:var(--gold);border-radius:99px;padding:14px 22px 16px 34px;box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.tease i{font-style:normal;display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--f);color:var(--gold);font-size:34px;line-height:1}
+.red .tease{background:#ff7a6e}.red .tease i{color:#ff7a6e}
+.t2{gap:32px}.t2 .cal{gap:20px}.t2 .day{padding:26px 36px}.t2 .day b{font-size:56px}.t2 h2{font-size:90px}
 .srcl{position:absolute;left:96px;right:96px;bottom:110px;font:400 19px/1.45 M,monospace;color:var(--dim);border-top:1px solid rgba(242,239,230,.15);padding-top:14px;z-index:2}
-.cover{justify-content:flex-end;padding-bottom:215px;gap:30px}
+.cover{justify-content:flex-end;padding-bottom:300px;gap:30px}
 .cover .photo{position:absolute;left:0;right:0;top:0;height:900px;background-size:cover;background-position:50% 18%;filter:saturate(1.05) contrast(1.05);-webkit-mask-image:linear-gradient(180deg,#000 45%,transparent 96%);mask-image:linear-gradient(180deg,#000 45%,transparent 96%)}
 .cover .photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,20,16,.75) 0%,rgba(11,20,16,0) 16%,rgba(11,20,16,0) 34%,rgba(11,20,16,.7) 62%,rgba(11,20,16,.85) 100%)}
 .cover .hd,.cover .ft,.cover .kick,.cover h1,.cover .pass,.cover .note{position:relative;z-index:1}
