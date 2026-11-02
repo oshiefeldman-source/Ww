@@ -80,6 +80,7 @@ h1 em, h2 em { font-style: normal; color: var(--gold); }
 .fine { font-family: var(--mono); font-size: 2.3cqw; color: var(--ink-dim); letter-spacing: .06em; line-height: 1.5; }
 
 .hook h1 { font-size: 12.4cqw; line-height: .92; }
+.hook.long h1 { font-size: 10.2cqw; }
 .hook .sub, .r .sub { font-size: 4.6cqw; color: var(--ink); margin: 0; font-weight: 500; }
 .hook .sub { font-family: var(--mono); font-size: 3.4cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
 .r .num { font-size: 26cqw; font-weight: 800; line-height: .78; color: var(--gold); letter-spacing: -.05em; }
@@ -144,14 +145,16 @@ body.record .controls { display: none; }
   const HOOK = {
     hike: ['Rates just went up. <em class="red">Again.</em>', '5th hike this year. Here\'s why it\'s on Labor.'],
     hold: ['Rates held. <em>For now.</em>', 'After 4 hikes this year. Here\'s why it\'s on Labor.'],
-    pre:  ['Rates likely up <em class="red">tomorrow.</em>', 'It would be the 5th hike this year. Here\'s why it\'s on Labor.'],
+    pre:  ['Tomorrow\'s likely rate rise has <em class="red">Labor\'s fingerprints</em> all over it.', 'It would be the 5th hike this year.'],
   };
 
+  // beats timed to the narration take (each starts as Charlie starts the line)
   const SCENES = [
-    { s: 0, e: 3 }, { s: 3, e: 6.5 }, { s: 6.5, e: 10 }, { s: 10, e: 13.5 },
-    { s: 13.5, e: 17 }, { s: 17, e: 20.5 }, { s: 20.5, e: 25 }
+    { s: 0, e: 4.3 }, { s: 4.3, e: 8.9 }, { s: 8.9, e: 13.5 }, { s: 13.5, e: 16.6 },
+    { s: 16.6, e: 21.1 }, { s: 21.1, e: 24.6 }, { s: 24.6, e: 28.8 }
   ];
-  const DUR = 25;
+  const DUR = 28.8;
+  const B = SCENES.map(x => x.s);
   const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
   const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
   const easeOut = t => 1 - Math.pow(1 - t, 3);
@@ -255,12 +258,12 @@ body.record .controls { display: none; }
     let op = 1;
     if (k === 4) {
       if (VARIANT === 'hike') { const d = clamp((T - .8) / .5); h = bars[4].h; return { h, y: (1 - drop(d)) * 6, op: d > 0 ? 1 : 0, ghost: false }; }
-      return { h: bars[4].h, y: 0, op: VARIANT === 'pre' ? .28 + .12 * Math.sin(T * 5) : 0, ghost: true };
+      return { h: bars[4].h, y: 0, op: VARIANT === 'pre' ? .6 + .3 * Math.sin(T * 5) : 0, ghost: true };
     }
     return { h, y: 0, op, ghost: false };
   }
-  const coinsAt = T => T < 3 ? 6 : Math.round(lerp(6, COINS, easeOut(clamp((T - 3.3) / 2.6))));
-  const infAt = T => T < 13.5 ? 1.2 : lerp(1.2, 4.3, ease(clamp((T - 14) / 1.8)));
+  const coinsAt = T => T < B[1] ? 6 : Math.round(lerp(6, COINS, easeOut(clamp((T - B[1] - .3) / 2.6))));
+  const infAt = T => T < B[4] ? 1.2 : lerp(1.2, 4.3, ease(clamp((T - B[4] - .5) / 1.8)));
 
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), pos = new THREE.Vector3(), scl = new THREE.Vector3(1, 1, 1);
   const cards = [...document.querySelectorAll('.card')];
@@ -270,7 +273,7 @@ body.record .controls { display: none; }
   const bigEl = document.getElementById('big'), bigV = document.getElementById('bigv'), bigL = document.getElementById('bigl');
 
   function setVariant(v) {
-    VARIANT = v; document.getElementById('hookH').innerHTML = HOOK[v][0]; document.getElementById('hookS').textContent = HOOK[v][1];
+    VARIANT = v; document.querySelector('.hook').classList.toggle('long', v === 'pre'); document.getElementById('hookH').innerHTML = HOOK[v][0]; document.getElementById('hookS').textContent = HOOK[v][1];
     document.getElementById('variant').textContent = 'Ending: ' + v;
   }
   setVariant(VARIANT);
@@ -305,9 +308,9 @@ body.record .controls { display: none; }
     for (let k = 0; k < COINS; k++) {
       const [jx, jz, rot] = coinJit[k];
       let y = .055 + k * .11;
-      const landT = 3.3 + (k - 6) / (COINS - 6) * 2.6;
+      const landT = B[1] + .3 + (k - 6) / (COINS - 6) * 2.6;
       let s = k < n ? 1 : 0;
-      if (k >= 6 && T >= 3) { const d = clamp((T - landT + .25) / .25); y += (1 - d) * 1.2; s = d > 0 ? 1 : 0; }
+      if (k >= 6 && T >= B[1]) { const d = clamp((T - landT + .25) / .25); y += (1 - d) * 1.2; s = d > 0 ? 1 : 0; }
       pos.set(COIN_X + jx, y, COIN_Z + jz); q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), rot); scl.setScalar(Math.max(.001, s));
       m4.compose(pos, q, scl); coinMesh.setMatrixAt(k, m4);
     }
@@ -315,15 +318,15 @@ body.record .controls { display: none; }
     coinMat.emissiveIntensity = i === 1 ? .8 : .3;
     goldLight.position.set(COIN_X - 1.6, .055 + n * .11 + .6, COIN_Z + 1.8); goldLight.intensity = i === 1 ? 3 : 0;
     spendLabel.position.set(COIN_X, .055 + n * .11 + .5, COIN_Z);
-    spendLabel.material.opacity = i === 1 ? clamp((local - 1.6) / .4) : i > 1 ? .7 : 0;
+    spendLabel.material.opacity = i === 1 ? clamp((local - 2.9) / .4) : i > 1 ? .7 : 0;
     // inflation
     const ih = infAt(T) * IK;
     inf.scale.y = ih; inf.position.y = ih / 2;
-    infLbl.position.set(INF_X, ih + .45, INF_Z); infLbl.material.opacity = i >= 4 ? clamp((T - 14.6) / .4) : 0;
+    infLbl.position.set(INF_X, ih + .45, INF_Z); infLbl.material.opacity = i >= 4 ? clamp((T - B[4] - 1.1) / .4) : 0;
     band.material.opacity = i === 4 ? .32 : .16; bandLbl.material.opacity = i === 4 ? 1 : .45;
-    redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = i === 4 ? 2.4 * clamp((T - 14.4) / .6) : i === 0 ? 2 * shake : 0;
+    redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = i === 4 ? 2.4 * clamp((T - B[4] - .9) / .6) : i === 0 ? 2 * shake : 0;
     // house: lights dim through the chalmers beat and the ending
-    winMat.emissiveIntensity = i >= 5 ? lerp(1, .15, clamp((T - 17.8) / 1.6)) : 1;
+    winMat.emissiveIntensity = i >= 5 ? lerp(1, .15, clamp((T - B[5] - .8) / 1.6)) : 1;
     dust.rotation.y = T * .03;
     renderer.render(scene, camera);
 
@@ -347,7 +350,7 @@ body.record .controls { display: none; }
       else { bigV.textContent = '4.60%'; bigL.textContent = 'Cash rate · highest in 15 years'; bigV.classList.remove('red'); }
     }
     bigEl.style.opacity = (bo * clamp((S.e - T) / .3)).toFixed(3);
-    document.getElementById('follow').style.opacity = (i === 6 ? clamp((T - 21.4) / .4) : 0).toFixed(3);
+    document.getElementById('follow').style.opacity = (i === 6 ? clamp((T - B[6] - .9) / .4) : 0).toFixed(3);
   }
 
   function resize() {
