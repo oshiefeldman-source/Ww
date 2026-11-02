@@ -4,7 +4,7 @@ const S = process.argv[2], F = S + '/fonts';
 const glob = (d, f) => path.join(F, fs.readdirSync(F).find(x => x.includes(d)), 'package/files', f);
 const font = (fam, w, file) => `@font-face{font-family:"${fam}";font-weight:${w};src:url(data:font/woff2;base64,${fs.readFileSync(file).toString('base64')}) format("woff2")}`;
 const css = [700,800].map(w => font('Bricolage Grotesque', w, glob('bricolage', `bricolage-grotesque-latin-${w}-normal.woff2`))).join('') + font('IBM Plex Mono', 500, glob('plex', 'ibm-plex-mono-latin-500-normal.woff2'));
-const bg = 'data:image/png;base64,' + fs.readFileSync(S + '/bg_coins.png').toString('base64');
+const bg = 'data:image/png;base64,' + fs.readFileSync(S + '/bg_coins_hi.png').toString('base64');
 const html = `<!doctype html><meta charset="utf-8"><style>${css}
 *{box-sizing:border-box} body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0b1410;font-family:"Bricolage Grotesque",sans-serif;color:#f2efe6}
 .bg{position:absolute;inset:0;background:url(${bg}) center/cover;transform:scale(1.12) translateY(140px);filter:saturate(1.1)}
@@ -27,7 +27,7 @@ h1 em{font-style:normal;color:#e3b54a}
 <div class="foot"><span style="text-transform:none;letter-spacing:.06em">@osherfeldman</span><span>Opinion</span></div>`;
 fs.writeFileSync(S + '/cover.html', html);
 (async () => {
-  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1080, height: 1920 } });
+  const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 2 });
   await p.goto('file://' + S + '/cover.html'); await p.evaluate(() => document.fonts.ready); await p.waitForTimeout(300);
-  await p.screenshot({ path: '/home/user/Ww/rates/cover-any.png' }); await b.close();
+  await p.screenshot({ path: '/home/user/Ww/rates/cover-any@2x.png' }); await b.close();
 })();
