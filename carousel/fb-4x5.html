@@ -1,0 +1,43 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Recession FB Graphic</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--red:#E3120B;--ink:#0B0B0C}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#222;font-family:Inter,sans-serif;padding:40px}
+.slide{width:1080px;height:1350px;position:relative;overflow:hidden;background:var(--ink);color:#fff}
+.photo{position:absolute;top:0;left:0;right:0;height:52%;background:url(img/frown.jpg) center 15%/cover;filter:grayscale(1) contrast(1.15) brightness(.8);-webkit-mask-image:linear-gradient(180deg,#000 50%,transparent 100%)}
+.anton{font-family:Anton,Impact,sans-serif;text-transform:uppercase;line-height:.88}
+.tag{position:absolute;top:56px;left:64px;background:var(--red);font-weight:900;font-size:26px;letter-spacing:3px;padding:12px 20px;text-transform:uppercase}
+.hero{position:absolute;left:64px;right:64px;top:210px}
+.stats{position:absolute;left:64px;right:64px;top:600px;display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.c{background:rgba(255,255,255,.07);border-top:8px solid var(--red);padding:22px 26px}
+.c .n{font-family:Anton;font-size:86px;line-height:1}
+.c .n.r{color:var(--red)}
+.c .l{font-size:24px;font-weight:700;margin-top:8px;line-height:1.25;color:rgba(255,255,255,.9)}
+.q{position:absolute;left:64px;right:64px;top:1085px;font-size:26px;font-weight:700;line-height:1.35;color:rgba(255,255,255,.85)}
+.q b{color:#fff}
+.end{position:absolute;left:0;right:0;bottom:0;height:110px;background:var(--red);display:flex;align-items:center;justify-content:space-between;padding:0 64px}
+.end .anton{font-size:52px}
+.end .src{font-size:16px;color:rgba(255,255,255,.85);text-align:right;line-height:1.35}
+</style></head><body>
+<section class="slide" id="fb">
+  <div class="photo"></div>
+  <div class="tag">Warning</div>
+  <div class="hero">
+    <div class="anton" style="font-size:240px;color:var(--red);margin-left:-8px">Recession</div>
+    <div class="anton" style="font-size:110px;margin-top:12px">is knocking.</div>
+  </div>
+  <div class="stats">
+    <div class="c"><div class="n r">30–40%</div><div class="l">Chance of recession, says AMP's chief economist</div></div>
+    <div class="c"><div class="n">4.85%</div><div class="l">Cash rate expected on Cup Day. An 18-year high.</div></div>
+    <div class="c"><div class="n">+$500</div><div class="l">A month extra this year on a $600k mortgage</div></div>
+    <div class="c"><div class="n">5th</div><div class="l">Rate rise this year. Four years of Labor, inflation still above target.</div></div>
+  </div>
+  <div class="q">Labor's answer? <b>“Even if the Australian government was to cut its budget to zero, we would still be experiencing inflationary pressures.”</b> Murray Watt</div>
+  <div class="end">
+    <div class="anton">They caused it. You're paying.</div>
+    <div class="src">Source: Sydney Morning Herald,<br>2 Nov 2026. Opinion.</div>
+  </div>
+</section>
+</body></html>
