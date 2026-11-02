@@ -16,12 +16,13 @@ const html = `<!doctype html><meta charset="utf-8"><style>${css}
 .ways{font-weight:800;font-size:128px;line-height:.86;letter-spacing:-.03em;padding-bottom:10px}
 h1{margin:34px 0 0;font-weight:800;font-size:104px;line-height:.92;letter-spacing:-.03em;text-shadow:0 6px 30px rgba(0,0,0,.6)}
 h1 em{font-style:normal;color:#e3b54a}
-.hk{font-size:150px;line-height:.92;margin:0;letter-spacing:-.04em}.wrap .tag{margin-bottom:34px}.hk.r{color:#ff6b5e}.five-r{display:inline-block;margin-top:40px;font-weight:800;font-size:64px;color:#0b1410;background:#e3b54a;border-radius:20px;padding:8px 32px 14px}
+.hk{font-size:150px;line-height:.92;margin:0;letter-spacing:-.04em}.wrap .tag{margin-bottom:34px}.hk.r{color:#ff6b5e}.rr{font-weight:800;font-size:150px;line-height:.9;letter-spacing:-.03em;margin-top:30px;text-transform:uppercase}.rate{font-weight:800;font-size:282px;line-height:.82;letter-spacing:-.06em;color:#ff4a3a;text-shadow:0 20px 70px rgba(255,60,40,.35)}.rate span{color:#ff8a7e}.fp{font-weight:800;font-size:84px;line-height:.98;letter-spacing:-.03em;margin-top:34px;max-width:900px}.fp em{font-style:normal;color:#e3b54a}.five-r{display:inline-block;margin-top:34px;font-weight:800;font-size:58px;color:#0b1410;background:#e3b54a;border-radius:20px;padding:8px 32px 14px}
 .foot{position:absolute;left:84px;right:84px;bottom:300px;display:flex;justify-content:space-between;font:500 30px "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:#f2efe6}
 .foot span{background:rgba(11,20,16,.75);padding:12px 20px;border-radius:10px}
 </style><div class="bg"></div><div class="shade"></div>
-<div class="wrap"><div class="tag">Likely rate rise tomorrow</div>
-<h1 class="hk">Labor's</h1><h1 class="hk r">fingerprints</h1><h1 class="hk">are all over it.</h1>
+<div class="wrap"><div class="tag">RBA decision · Tue 3 Nov</div>
+<div class="rr">Rate rise</div><div class="rate">4.85%<span>?</span></div>
+<div class="fp">Labor's <em>fingerprints</em> are all over it.</div>
 <div class="five-r">5 reasons →</div></div>
 <div class="foot"><span style="text-transform:none;letter-spacing:.06em">@osherfeldman</span><span>Opinion</span></div>`;
 fs.writeFileSync(S + '/cover.html', html);
