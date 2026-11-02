@@ -143,8 +143,8 @@ body.record .controls { display: none; }
   // Which way did the RBA go on 3 Nov? 'hike' (default), 'hold', or 'pre' (posting before the decision)
   let VARIANT = (location.search.match(/[?&]v=(hike|hold|pre)/) || [])[1] || window.__VARIANT || 'hike';
   const HOOK = {
-    hike: ['Rates just went up. <em class="red">Again.</em>', '5th hike this year. Here\'s why it\'s on Labor.'],
-    hold: ['Rates held. <em>For now.</em>', 'After 4 hikes this year. Here\'s why it\'s on Labor.'],
+    hike: ['Rates just went up. <em class="red">Again.</em>', '5th hike this year. Labor\'s fingerprints are all over it.'],
+    hold: ['Rates held. <em>For now.</em>', 'Labor\'s fingerprints are all over this year\'s 4 hikes.'],
     pre:  ['Tomorrow\'s likely rate rise has <em class="red">Labor\'s fingerprints</em> all over it.', 'It would be the 5th hike this year.'],
   };
 
