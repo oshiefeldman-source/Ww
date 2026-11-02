@@ -1,0 +1,453 @@
+<title>Hanson Path to PM</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 9:16 reel frame; 3D caricature, poll bars, chambers and a 150-seat House behind; captions in the lower third. */
+:root {
+  --field: #100c0a;        /* warm near-black */
+  --ink: #f4efe8;
+  --ink-dim: #b8ab9f;
+  --orange: #f36c21;       /* One Nation orange */
+  --orange-hi: #ff9a4d;
+  --gold: #f2c14e;         /* majority line */
+  --display: "Bricolage Grotesque", "Inter Display", "Arial Narrow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--field); color: var(--ink); font-family: var(--display);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px; box-sizing: border-box; overflow: hidden;
+}
+.stage { position: relative; height: calc(100% - 64px); aspect-ratio: 9 / 16; max-width: 100%; border-radius: 14px; overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 28%, #2a170c 0%, var(--field) 70%); container-type: size;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(243,108,33,.15); }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.vignette { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(16,12,10,.85) 0%, rgba(16,12,10,.4) 13%, rgba(16,12,10,0) 21%, rgba(16,12,10,0) 44%, rgba(16,12,10,.8) 58%, rgba(16,12,10,.95) 70%, rgba(16,12,10,.97) 100%); }
+.top { position: absolute; left: 11cqw; right: 11cqw; top: 12.5cqh; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); }
+.top .handle { text-transform: none; letter-spacing: .06em; color: var(--ink); }
+.top .mark { display: flex; gap: 1.6cqw; align-items: center; }
+.top .mark i { width: 2.2cqw; height: 2.2cqw; border-radius: 50%; background: var(--orange); display: inline-block; }
+.ai { position: absolute; left: 11cqw; top: 15.4cqh; font-family: var(--mono); font-size: 2.1cqw; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-dim); border: 1px solid rgba(244,239,232,.25); border-radius: 99px; padding: .2cqh 1.8cqw; }
+.progress { position: absolute; left: 11cqw; right: 11cqw; top: 10.5cqh; display: flex; gap: 1cqw; }
+.progress span { flex: 1; height: .45cqw; min-height: 2px; border-radius: 2px; background: rgba(244,239,232,.18); overflow: hidden; }
+.progress span b { display: block; height: 100%; width: 0; background: var(--orange); }
+
+.card { position: absolute; left: 11cqw; right: 14cqw; bottom: 18cqh; display: flex; flex-direction: column; gap: 1.8cqh; opacity: 0; will-change: transform, opacity; }
+.eyebrow { font-family: var(--mono); font-size: 2.8cqw; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); }
+h1, h2 { margin: 0; font-weight: 800; letter-spacing: -.02em; line-height: .95; text-wrap: balance; font-variation-settings: "opsz" 96; }
+h1 { font-size: 12.6cqw; line-height: .92; }
+h2 { font-size: 10.6cqw; }
+h1 em, h2 em { font-style: normal; color: var(--orange); }
+.sub { font-size: 4.4cqw; line-height: 1.3; color: var(--ink); margin: 0; font-weight: 500; max-width: 32ch; }
+.sub b { color: var(--orange-hi); font-weight: 800; }
+.src { font-family: var(--mono); font-size: 2.3cqw; color: var(--ink-dim); letter-spacing: .08em; text-transform: uppercase; }
+.fine { font-family: var(--mono); font-size: 2.2cqw; color: var(--ink-dim); letter-spacing: .05em; line-height: 1.5; }
+.cta { margin: 0; align-self: flex-start; font-size: 6.4cqw; font-weight: 800; color: var(--field); background: var(--orange); border-radius: 2cqw; padding: .4cqh 3.6cqw .8cqh; }
+.big { position: absolute; right: 11cqw; top: 19cqh; text-align: right; opacity: 0; font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 18px rgba(16,12,10,.9), 0 0 4px rgba(16,12,10,.8); }
+.big .v { font-size: 15cqw; font-weight: 800; line-height: .9; letter-spacing: -.04em; color: var(--orange); }
+.big .l { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); max-width: 44cqw; margin-left: auto; margin-top: 1cqh; }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.controls button { font: 500 13px/1 var(--mono); color: var(--ink); background: rgba(244,239,232,.07); border: 1px solid rgba(244,239,232,.18);
+  border-radius: 99px; padding: 9px 14px; cursor: pointer; letter-spacing: .04em; }
+.controls button:hover { background: rgba(244,239,232,.14); }
+.controls button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+body.record { padding: 0; gap: 0; }
+body.record .stage { height: 100%; border-radius: 0; box-shadow: none; }
+body.record .controls { display: none; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="progress" id="progress"></div>
+  <div class="top"><span class="mark"><i></i>Canberra explainer</span><span class="handle">@osherfeldman</span></div>
+  <div class="ai">AI caricature</div>
+  <div class="big" id="big"><div class="v" id="bigv"></div><div class="l" id="bigl"></div></div>
+
+  <section class="card" data-scene="0">
+    <h1>Could Hanson become <em>PM?</em></h1>
+    <p class="eyebrow">The path, by the numbers</p>
+  </section>
+  <section class="card" data-scene="1">
+    <p class="eyebrow">The polls</p>
+    <h2>Neck and <em>neck</em></h2>
+    <p class="sub">One Nation <b>28%</b> · Labor 29% · Coalition 20%</p>
+    <p class="src">Newspoll · 12 Oct 2026 · primary vote</p>
+  </section>
+  <section class="card" data-scene="2">
+    <p class="eyebrow">Problem: she's a senator</p>
+    <h2>PMs sit in the <em>House</em></h2>
+    <p class="sub">She'd likely need a lower-house seat. Maybe <b>Wright</b>, where she lives: Liberal-held, about 8%.</p>
+  </section>
+  <section class="card" data-scene="3">
+    <p class="eyebrow">House of Representatives</p>
+    <h2><em>2</em> of 150 seats</h2>
+    <p class="sub">A majority takes <b>76</b>.</p>
+  </section>
+  <section class="card" data-scene="4">
+    <p class="eyebrow">Seat projections</p>
+    <h2><em id="rng">24 to 66</em> seats</h2>
+    <p class="sub">That's the range across 2026 models. Majority: <b>76</b>.</p>
+    <p class="src">RedBridge/Accent &amp; DemosAU MRP polls, 2026</p>
+  </section>
+  <section class="card" data-scene="5">
+    <h2>Possible or <em>impossible?</em></h2>
+    <p class="cta">Tell us below ↓</p>
+    <div class="fine">AI caricature · Sources: Newspoll Oct 2026; RedBridge/Accent MRP May 2026; DemosAU MRP 2026; AEC</div>
+  </section>
+</div>
+
+<div class="controls">
+  <button id="play" type="button">Play with sound</button>
+  <button id="restart" type="button">Restart</button>
+</div>
+<audio id="vo" src="voiceover/vo.mp3" preload="auto"></audio>
+
+<script src="amp.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const RECORD = /[?&]record\b/.test(location.search) || window.__RECORD;
+  if (RECORD) document.body.classList.add('record');
+  const AMP = window.__AMP || [];
+
+  // beats timed to Charlie's take (silences at 2.6, 7.2, 16.4, 21.9, 26.3s)
+  const SCENES = [{ s: 0, e: 2.95 }, { s: 2.95, e: 7.6 }, { s: 7.6, e: 16.6 }, { s: 16.6, e: 22.2 }, { s: 22.2, e: 26.5 }, { s: 26.5, e: 30.6 }];
+  const DUR = 30.6;
+  const B = SCENES.map(x => x.s);
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const backOut = t => { const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const sceneAt = t => { for (let i = SCENES.length - 1; i >= 0; i--) if (t >= SCENES[i].s) return i; return 0; };
+  const ampAt = T => { const f = T * 30, k = Math.floor(f), u = f - k; return lerp(AMP[k] || 0, AMP[k + 1] || 0, u); };
+  const rnd = k => { const x = Math.sin(k * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+  const ORANGE = 0xf36c21;
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true, preserveDrawingBuffer: RECORD });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x100c0a, 30, 70);
+  const camera = new THREE.PerspectiveCamera(42, 9/16, .1, 100);
+  scene.add(new THREE.HemisphereLight(0xffe8d6, 0x1a0f08, .55));
+  const key = new THREE.DirectionalLight(0xfff1e0, 1.1); key.position.set(-5, 13, 10); key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024); Object.assign(key.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 45 });
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xff8a3d, .9); rim.position.set(7, 6, -9); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xffd9c0, .35); fill.position.set(6, 3, 8); scene.add(fill);
+  const pop = new THREE.PointLight(ORANGE, 0, 12, 2); scene.add(pop);
+
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(30, 72), new THREE.MeshStandardMaterial({ color: 0x1c130e, roughness: .95 }));
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+  const grid = new THREE.GridHelper(40, 40, 0x5a2d14, 0x2e1c12); grid.position.y = .005; grid.material.transparent = true; grid.material.opacity = .45; scene.add(grid);
+
+  function label(text, { size = 64, color = '#f4efe8', weight = 800, font = 'Bricolage Grotesque', w = 512, h = 160 } = {}) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const tex = new THREE.CanvasTexture(c);
+    const draw = () => { const g = c.getContext('2d'); g.clearRect(0, 0, w, h); g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = `${weight} ${size}px "${font}", "Inter Display", "Inter", sans-serif`; g.fillText(text, w/2, h/2); tex.needsUpdate = true; };
+    draw(); (document.fonts && document.fonts.ready || Promise.resolve()).then(draw);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+    sp.scale.set(w / 160, h / 160, 1); return sp;
+  }
+  const std = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness: .6 }, o));
+  const shadowed = m => { m.castShadow = true; m.receiveShadow = true; return m; };
+
+  // ---------------- Parliament House backdrop (stylised): long white wings + the four-legged flagmast
+  const parl = new THREE.Group();
+  const white = std(0xece6da, { roughness: .8 });
+  const wing = shadowed(new THREE.Mesh(new THREE.BoxGeometry(18, 1.3, 3), white)); wing.position.y = .65; parl.add(wing);
+  const front = shadowed(new THREE.Mesh(new THREE.BoxGeometry(5, 2, 1.2), white)); front.position.set(0, 1, 1.9); parl.add(front);
+  for (let k = 0; k < 9; k++) { const col = new THREE.Mesh(new THREE.BoxGeometry(.18, 1.6, .18), std(0xd8d0c0)); col.position.set(-2.2 + k * .55, .8, 2.6); parl.add(col); }
+  const grass = new THREE.Mesh(new THREE.BoxGeometry(18, .3, 2.4), std(0x31502c, { roughness: 1 })); grass.position.set(0, 1.45, -.2); parl.add(grass);
+  const steel = std(0xdfe3e8, { metalness: .9, roughness: .25 });
+  const TOP = new THREE.Vector3(0, 9.5, 0);
+  [[-1.4, -1.4], [1.4, -1.4], [1.4, 1.4], [-1.4, 1.4]].forEach(([x, z]) => {
+    const a = new THREE.Vector3(x, 1.4, z), d = TOP.clone().sub(a), len = d.length();
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(.06, .1, len, 8), steel);
+    leg.position.copy(a).add(d.clone().multiplyScalar(.5)); leg.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); parl.add(leg);
+  });
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(.04, .04, 2.2, 8), steel); mast.position.set(0, 10.5, 0); parl.add(mast);
+  const flag = new THREE.Mesh(new THREE.PlaneGeometry(1.5, .8, 10, 1), std(0x1b2a6b, { side: THREE.DoubleSide, roughness: .9 })); flag.position.set(.78, 11.1, 0); parl.add(flag);
+  const flagPos = flag.geometry.attributes.position, flagX = Array.from({ length: flagPos.count }, (_, k) => flagPos.getX(k));
+  parl.position.set(0, 0, -12); scene.add(parl);
+
+  // ---------------- the caricature
+  const H = new THREE.Group();
+  const skin = std(0xeaa98a, { roughness: .55 });
+  // dress/jacket with a houndstooth print (a nod to the Press Club jacket)
+  const tc = document.createElement('canvas'); tc.width = tc.height = 64; const tg = tc.getContext('2d');
+  tg.fillStyle = '#ece7df'; tg.fillRect(0, 0, 64, 64); tg.fillStyle = '#1b1b1b';
+  for (let y = 0; y < 64; y += 16) for (let x = 0; x < 64; x += 16) { if (((x + y) / 16) % 2) continue;
+    tg.fillRect(x, y, 8, 8); tg.beginPath(); tg.moveTo(x + 8, y); tg.lineTo(x + 14, y); tg.lineTo(x + 8, y + 6); tg.fill();
+    tg.beginPath(); tg.moveTo(x, y + 8); tg.lineTo(x, y + 14); tg.lineTo(x + 6, y + 8); tg.fill(); }
+  const tTex = new THREE.CanvasTexture(tc); tTex.wrapS = tTex.wrapT = THREE.RepeatWrapping; tTex.repeat.set(6, 4);
+  const cloth = std(0xffffff, { map: tTex, roughness: .85 });
+  const bodyPts = [[0, 0], [.46, 0], [.42, .3], [.36, .7], [.38, .95], [.48, 1.2], [.4, 1.38], [.16, 1.47], [0, 1.48]].map(([x, y]) => new THREE.Vector2(x, y));
+  const body = shadowed(new THREE.Mesh(new THREE.LatheGeometry(bodyPts, 40), cloth)); H.add(body);
+  const lapel = new THREE.Mesh(new THREE.ConeGeometry(.16, .3, 3), std(0x111111)); lapel.position.set(0, 1.34, .33); lapel.rotation.set(Math.PI + .3, 0, 0); lapel.scale.set(1, 1, .3); H.add(lapel);
+  [-.15, .15].forEach(x => { const s = new THREE.Mesh(new THREE.SphereGeometry(.12, 16, 12), std(0x161210)); s.position.set(x, .05, .3); s.scale.set(1, .6, 1.5); H.add(s); });
+  // arms: [group at shoulder, sleeve, hand]
+  const arms = [-1, 1].map(side => {
+    const g = new THREE.Group(); g.position.set(side * .47, 1.22, 0);
+    const sleeve = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(.11, .13, .78, 16), cloth)); sleeve.position.y = -.39; g.add(sleeve);
+    const hand = new THREE.Mesh(new THREE.SphereGeometry(.11, 16, 12), skin); hand.position.y = -.82; g.add(hand);
+    H.add(g); return g;
+  });
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(.14, .16, .25, 16), skin); neck.position.y = 1.56; H.add(neck);
+  const pearlMat = std(0xfbf6ee, { roughness: .15, metalness: .15, emissive: 0x332a22, emissiveIntensity: .25 });
+  for (let k = 0; k < 20; k++) { const a = k / 20 * Math.PI * 2, p = new THREE.Mesh(new THREE.SphereGeometry(.036, 10, 8), pearlMat);
+    p.position.set(Math.sin(a) * .19, 1.49 - Math.max(0, Math.cos(a)) * .06, Math.cos(a) * .19); H.add(p); }
+
+  const head = new THREE.Group(); head.position.y = 2.2; H.add(head);
+  const skull = shadowed(new THREE.Mesh(new THREE.SphereGeometry(.55, 40, 32), skin)); skull.scale.set(1, 1.12, .95); head.add(skull);
+  [-1, 1].forEach(s => {
+    const ear = new THREE.Mesh(new THREE.SphereGeometry(.1, 12, 10), skin); ear.position.set(s * .53, -.02, 0); ear.scale.set(.5, 1, .8); head.add(ear);
+    const er = new THREE.Mesh(new THREE.SphereGeometry(.06, 14, 10), pearlMat); er.position.set(s * .56, -.15, .04); head.add(er);
+    const cheek = new THREE.Mesh(new THREE.SphereGeometry(.12, 14, 10), std(0xef8a7a, { transparent: true, opacity: .55, roughness: .7 })); cheek.position.set(s * .29, -.12, .41); cheek.scale.set(1, .7, .4); head.add(cheek);
+  });
+  const nose = new THREE.Mesh(new THREE.SphereGeometry(.075, 16, 12), skin); nose.position.set(0, -.06, .53); nose.scale.set(.9, 1.3, 1); head.add(nose);
+  const eyes = [-1, 1].map(s => {
+    const g = new THREE.Group(); g.position.set(s * .19, .08, .43);
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(.105, 20, 16), std(0xffffff, { roughness: .3 })); g.add(ball);
+    const iris = new THREE.Mesh(new THREE.SphereGeometry(.058, 16, 12), std(0x4f8a8c, { roughness: .3 })); iris.position.z = .062; iris.scale.z = .6; g.add(iris);
+    const pupil = new THREE.Mesh(new THREE.SphereGeometry(.03, 12, 10), std(0x0a0a0a, { roughness: .2 })); pupil.position.z = .092; pupil.scale.z = .5; g.add(pupil);
+    const lid = new THREE.Mesh(new THREE.SphereGeometry(.115, 20, 12, 0, Math.PI * 2, 0, .95), skin); lid.rotation.x = .15; g.add(lid);
+    const brow = new THREE.Mesh(new THREE.TorusGeometry(.13, .018, 8, 20, 2.1), std(0x8a3018)); brow.position.set(0, .1, .06); brow.rotation.z = .52 + (s > 0 ? 0 : 0); g.add(brow);
+    head.add(g); return { g, lid, brow, s };
+  });
+  const mouth = new THREE.Group(); mouth.position.set(0, -.27, .47); mouth.rotation.x = -.25; head.add(mouth);
+  const inner = new THREE.Mesh(new THREE.SphereGeometry(.085, 16, 12), std(0x3a0c0c, { roughness: .9 })); inner.scale.set(1.1, .1, .3); mouth.add(inner);
+  const lips = new THREE.Mesh(new THREE.TorusGeometry(.1, .03, 10, 28), std(0xc81e2a, { roughness: .35 })); mouth.add(lips);
+
+  // bouffant: instanced spheres on an ellipsoid shell, swept up and back, plus a side fringe
+  const hairCols = [0xc9461f, 0xb83d1a, 0xd75226, 0xc04120].map(c => new THREE.Color(c));
+  const hairMat = std(0xc4431e, { roughness: .75 });
+  const cap = shadowed(new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24), hairMat)); cap.scale.set(.6, .44, .6); cap.position.set(0, .3, -.06); head.add(cap);
+  const back = shadowed(new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24), hairMat)); back.scale.set(.6, .5, .45); back.position.set(0, .05, -.2); head.add(back);
+  const hairPts = [];
+  for (let k = 0; k < 1400 && hairPts.length < 240; k++) {
+    const u = rnd(k), v = rnd(k + 999), th = u * Math.PI * 2, ph = Math.acos(1 - 2 * v);
+    const x = Math.sin(ph) * Math.cos(th) * .62, y = Math.cos(ph) * .5 + .26, z = Math.sin(ph) * Math.sin(th) * .62 - .08;
+    const front = z > .2;
+    if (front && y < .5) continue;
+    if (!front && y < (Math.abs(x) > .45 ? -.12 : .05)) continue;
+    hairPts.push([x, y, z, .085 + rnd(k + 7) * .05]);
+  }
+  // the swept fringe, rising from her left to a high crest on the right
+  for (let k = 0; k < 9; k++) hairPts.push([-.42 + k * .1, .52 + k * .025, .44 - Math.abs(k - 4) * .035, .13]);
+  const hair = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 14, 10), std(0xffffff, { roughness: .7 }), hairPts.length);
+  hair.castShadow = true;
+  const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _p = new THREE.Vector3(), _s = new THREE.Vector3();
+  hairPts.forEach(([x, y, z, r], k) => { _p.set(x, y, z); _s.setScalar(r); _m.compose(_p, _q, _s); hair.setMatrixAt(k, _m); hair.setColorAt(k, hairCols[k % 4]); });
+  head.add(hair);
+  H.scale.setScalar(1);
+  scene.add(H);
+  const qMark = label('?', { size: 150, color: '#f36c21', w: 200, h: 200 }); qMark.scale.set(1.4, 1.4, 1); scene.add(qMark);
+
+  // ---------------- poll bars (left)
+  const BK = .12, POLL = [['ONE NATION', 28, ORANGE, -5.6], ['LABOR', 29, 0xd8343a, -4.2], ['COALITION', 20, 0x2f6fd1, -2.8]];
+  const bars = POLL.map(([name, v, color, x]) => {
+    const mat = std(color, { roughness: .4, metalness: .1, emissive: color, emissiveIntensity: .15 });
+    const mesh = shadowed(new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), mat)); mesh.position.set(x, 0, -.5); scene.add(mesh);
+    const top = label(v + '%', { size: 72, color: color === ORANGE ? '#ff8a3d' : '#f4efe8' }); top.scale.multiplyScalar(.5); scene.add(top);
+    const bot = label(name, { size: 40, weight: 500, font: 'IBM Plex Mono', color: '#b8ab9f' }); bot.scale.multiplyScalar(.5); bot.position.set(x, .22, .35); scene.add(bot);
+    return { mesh, mat, top, bot, h: v * BK, x, name };
+  });
+
+  // ---------------- chambers (right): red Senate, green House
+  const SEN = new THREE.Vector3(4.9, 0, .4), HOR = new THREE.Vector3(7.9, 0, .4);
+  const mkPad = (pos, color, text) => {
+    const pad = shadowed(new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.25, .3, 48), std(color, { roughness: .7 }))); pad.position.copy(pos).setY(.15); scene.add(pad);
+    const lb = label(text, { size: 44, weight: 500, font: 'IBM Plex Mono', color: '#f4efe8', w: 640 }); lb.scale.multiplyScalar(.55); lb.position.copy(pos).add(new THREE.Vector3(0, .45, 1.55)); scene.add(lb);
+    return { pad, lb };
+  };
+  const senPad = mkPad(SEN, 0xa3283a, 'SENATE'), horPad = mkPad(HOR, 0x2f7a52, 'HOUSE OF REPS');
+  const pin = new THREE.Group();
+  const pinHead = new THREE.Mesh(new THREE.SphereGeometry(.32, 24, 16), std(ORANGE, { emissive: ORANGE, emissiveIntensity: .4 })); pinHead.position.y = 1.0; pin.add(pinHead);
+  const pinTip = new THREE.Mesh(new THREE.ConeGeometry(.2, .8, 20), std(ORANGE)); pinTip.position.y = .45; pinTip.rotation.x = Math.PI; pin.add(pinTip);
+  const pinLbl = label('WRIGHT · LIB ~8%', { size: 52, color: '#f4efe8', w: 640 }); pinLbl.scale.multiplyScalar(.6); pinLbl.position.y = 1.75; pin.add(pinLbl);
+  pin.position.set(HOR.x + 1.25, 0, HOR.z - .9); scene.add(pin);
+
+  // ---------------- the House: 150 seats in a hemicycle (back centre)
+  const HC = new THREE.Vector3(0, 0, -5.2);
+  const ROWS = [[1.6, 14], [2.1, 18], [2.6, 23], [3.1, 27], [3.6, 32], [4.1, 36]];
+  const seats = [];
+  ROWS.forEach(([r, n]) => { for (let k = 0; k < n; k++) { const a = Math.PI - (k + .5) / n * Math.PI; seats.push({ a, r }); } });
+  seats.sort((p, q) => q.a - p.a); // left to right
+  const seatMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(.12, .135, .2, 16), std(0xffffff, { roughness: .5 }), seats.length);
+  seatMesh.castShadow = true;
+  seats.forEach((st, k) => { _p.set(HC.x + Math.cos(st.a) * st.r, .1 + (st.r - 1.6) * .12, HC.z - Math.sin(st.a) * st.r); _s.set(1, 1, 1); _m.compose(_p, _q, _s); seatMesh.setMatrixAt(k, _m); });
+  scene.add(seatMesh);
+  const tiers = new THREE.Mesh(new THREE.RingGeometry(1.3, 4.4, 64, 1, 0, Math.PI), std(0x2a1d15, { side: THREE.DoubleSide, roughness: .9 }));
+  tiers.rotation.x = -Math.PI / 2; tiers.position.set(HC.x, .02, HC.z); tiers.receiveShadow = true; scene.add(tiers);
+  // majority line: seats are filled left to right, so seat 76 sits on the centre line
+  const majMat = std(0xf2c14e, { emissive: 0xf2c14e, emissiveIntensity: .9, transparent: true });
+  const maj = new THREE.Mesh(new THREE.BoxGeometry(.07, .6, 3.1), majMat); maj.position.set(HC.x, .35, HC.z - 2.85); scene.add(maj);
+  const majLbl = label('76 = MAJORITY', { size: 56, color: '#f2c14e', w: 640 }); majLbl.scale.multiplyScalar(.6); majLbl.position.set(HC.x, 1.0, HC.z - 4.9); scene.add(majLbl);
+  const C = { grey: new THREE.Color(0x4a3f38), orange: new THREE.Color(ORANGE), range: new THREE.Color(0xffb27a), gold: new THREE.Color(0x8a6a22) };
+  const tmpC = new THREE.Color();
+
+  // embers
+  const dg = new THREE.BufferGeometry(), dp = new Float32Array(260 * 3);
+  for (let i = 0; i < 260; i++) { dp[i*3] = (rnd(i) - .5) * 26; dp[i*3+1] = rnd(i + 50) * 10; dp[i*3+2] = (rnd(i + 90) - .5) * 26; }
+  dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: 0xff8a3d, size: .05, transparent: true, opacity: .5 })); scene.add(dust);
+
+  // ---------------- cameras per beat [pos start, look start, pos end, look end]
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const CAMS = [
+    [V(.2, 2.75, 6.2), V(0, 2.5, 1.2), V(1.2, 3.3, 10.6), V(0, 2.1, 0)],          // hook: face, pull back to Parliament
+    [V(-2.4, 3.6, 10.2), V(-4.2, 1.9, -.5), V(-3, 4.4, 11.2), V(-4.2, 2.1, -.5)],  // poll bars
+    [V(5.9, 6.6, 15.8), V(6.4, 1.75, .4), V(6.9, 6.4, 15.2), V(6.6, 1.8, .4)],       // Senate → House
+    [V(0, 15.5, 4.5), V(0, 0, -5.6), V(-1.2, 16.5, 4), V(0, 0, -5.8)],             // the House from above
+    [V(-5.5, 14, 5), V(0, 0, -5.6), V(5.5, 14, 5), V(0, 0, -5.6)],                 // sweep across the projections
+    [V(0, 3.6, 13.6), V(0, 2.1, 0), V(0, 4.6, 16.4), V(0, 2.0, -1.5)],               // ending
+  ];
+  function camFor(i, p) { const c = CAMS[i], e = ease(p); return [c[0].clone().lerp(c[2], e), c[1].clone().lerp(c[3], e)]; }
+
+  // where the caricature stands
+  const CENTER = V(0, 0, 1.2);
+  function hansonAt(T) {
+    const out = { pos: CENTER.clone(), s: 1, ry: 0, hop: 0 };
+    if (T < B[2]) { out.s = backOut(clamp(T / .55)); return out; }
+    if (T < B[5]) {
+      const h0 = 10.4, h1 = 11.5; // the hop across, on "lower-house seat"
+      const u = clamp((T - h0) / (h1 - h0));
+      out.pos = SEN.clone().lerp(HOR, ease(u)); out.pos.y = .3 + Math.sin(u * Math.PI) * 1.1;
+      out.hop = u > 0 && u < 1 ? 1 : 0; out.ry = 0;
+      const land = T - h1; if (land > 0 && land < .35) out.squash = Math.sin(land / .35 * Math.PI) * .18;
+      if (T < B[2] + .5) out.s = backOut(clamp((T - B[2]) / .45));
+      return out;
+    }
+    out.pos = V(0, 0, 2.6); out.s = backOut(clamp((T - B[5]) / .5)); return out;
+  }
+  // seats: solid One Nation seats, the projected range above them, and the ghosted path to 76
+  function seatsAt(T) {
+    if (T < B[4]) return { solid: 2, range: 0, ghost: T > 19.6 ? Math.round(lerp(2, 76, easeOut(clamp((T - 19.6) / 1.2)))) : 0 };
+    const lo = Math.round(lerp(2, 24, easeOut(clamp((T - B[4] - .2) / 1.1))));
+    const hi = Math.round(lerp(lo, 66, easeOut(clamp((T - 23.9) / 1.3))));
+    return { solid: lo, range: hi, ghost: 76 };
+  }
+
+  const cards = [...document.querySelectorAll('.card')];
+  const progress = document.getElementById('progress');
+  SCENES.forEach(() => { const s = document.createElement('span'); s.appendChild(document.createElement('b')); progress.appendChild(s); });
+  const pbars = [...progress.querySelectorAll('b')];
+  const bigEl = document.getElementById('big'), bigV = document.getElementById('bigv'), bigL = document.getElementById('bigl');
+
+  function render(T) {
+    T = clamp(T, 0, DUR - 1e-3);
+    const i = sceneAt(T), S = SCENES[i], local = T - S.s, p = clamp(local / (S.e - S.s));
+    const blend = i > 0 ? ease(clamp(local / .6)) : 1;
+    let [cp, cl] = camFor(i, p);
+    if (blend < 1) { const [pp, pl] = camFor(i - 1, 1); cp = pp.lerp(cp, blend); cl = pl.lerp(cl, blend); }
+    camera.position.copy(cp); camera.lookAt(cl);
+    const amp = ampAt(T);
+
+    // caricature
+    const st = hansonAt(T);
+    H.position.copy(st.pos); H.rotation.y = st.ry + Math.sin(T * .9) * .08;
+    const sq = st.squash || 0;
+    H.scale.set(st.s * (1 + sq), st.s * (1 - sq), st.s * (1 + sq)); H.visible = st.s > .001;
+    head.rotation.set(-.05 + Math.sin(T * 2.3) * .04 + amp * .08, Math.sin(T * 1.3) * .12, Math.sin(T * 1.7) * .05);
+    head.position.y = 2.2 + amp * .03;
+    mouth.scale.set(1 - amp * .15, .42 + amp * 1.2, 1); inner.scale.set(1.1, .15 + amp * .85, .3);
+    const blink = [1.7, 5.1, 9.3, 13.6, 18.2, 23.4, 27.9].some(b => Math.abs(T - b) < .07) ? .15 : 1;
+    eyes.forEach(e => { e.g.scale.y = blink; e.brow.position.y = .1 + amp * .05 + (i === 5 ? .03 : 0); });
+    // gestures: the outstretched Press Club arm while talking; both arms up on the hop
+    const talk = amp;
+    arms[0].rotation.set(0, 0, -(.25 + (st.hop ? 1.9 : 0)));
+    arms[1].rotation.set(-talk * .6 - Math.sin(T * 3.1) * .1 * (talk > .2), 0, .25 + (st.hop ? 1.9 : 1.1 * clamp(talk * 1.6) + .2 * Math.sin(T * 2.2)));
+    qMark.position.set(H.position.x + 1.25, 3.3 + Math.sin(T * 3) * .1, H.position.z); qMark.material.opacity = i === 5 ? clamp((T - B[5] - .5) / .3) : 0;
+    pop.position.set(H.position.x, 3, H.position.z + 2); pop.intensity = i === 0 ? 4 * Math.exp(-T * 2.5) + .6 : i === 5 ? 1.2 : .4;
+
+    // poll bars rise on the poll beat (and stay)
+    bars.forEach((b, k) => {
+      const g = T < B[1] ? 0 : easeOut(clamp((T - B[1] - .3 - k * .25) / 1.0));
+      const h = Math.max(.001, b.h * g);
+      b.mesh.scale.set(1, h, 1); b.mesh.position.y = h / 2;
+      b.top.position.set(b.x, h + .35, -.5); b.top.material.opacity = clamp((g - .7) / .3);
+      b.mat.emissiveIntensity = (k === 0 && i === 1) ? .35 + .15 * Math.sin(T * 6) : .15;
+      b.mesh.visible = i !== 5; b.top.visible = b.bot.visible = i !== 5;
+    });
+
+    // chambers + pin
+    senPad.pad.material.emissive.setHex(0xa3283a); senPad.pad.material.emissiveIntensity = i === 2 && T < 10.4 ? .35 : .05;
+    horPad.pad.material.emissive.setHex(0x2f7a52); horPad.pad.material.emissiveIntensity = i === 2 && T > 9.3 ? .3 + .15 * Math.sin(T * 6) : .05;
+    const pd = clamp((T - 12.7) / .45);
+    pin.visible = T > 12.7; pin.position.y = (1 - pd * pd) * 5; pinLbl.material.opacity = clamp((T - 13.2) / .3);
+    pin.rotation.y = T * 1.2;
+
+    // seats
+    const sa = seatsAt(T);
+    const pulse = .5 + .5 * Math.sin(T * 7);
+    for (let k = 0; k < seats.length; k++) {
+      if (k < sa.solid) tmpC.copy(C.orange).lerp(new THREE.Color(0xffd0a8), i === 3 ? pulse * .35 : 0);
+      else if (k < sa.range) tmpC.copy(C.range).lerp(C.grey, .25 + .25 * Math.sin(T * 5 + k * .4));
+      else if (k < sa.ghost) tmpC.copy(C.gold);
+      else tmpC.copy(C.grey);
+      seatMesh.setColorAt(k, tmpC);
+    }
+    seatMesh.instanceColor.needsUpdate = true;
+    const majOn = T > 19.6 ? clamp((T - 19.6) / .5) : 0;
+    majMat.opacity = majOn; maj.visible = majOn > 0; majLbl.material.opacity = majOn;
+
+    // flag + embers
+    for (let k = 0; k < flagPos.count; k++) { const x = flagX[k]; flagPos.setZ(k, Math.sin(x * 3 - T * 5) * .08 * (x + .75)); }
+    flagPos.needsUpdate = true;
+    dust.rotation.y = T * .04;
+    renderer.render(scene, camera);
+
+    // DOM
+    cards.forEach((c, k) => {
+      let o = 0, y = 0;
+      if (k === i) {
+        const inP = k === 0 ? easeOut(clamp(T / .35)) : easeOut(clamp((local - .1) / .4));
+        const outP = k === SCENES.length - 1 ? 1 : clamp((S.e - T - .02) / .3);
+        o = Math.min(inP, outP); y = (1 - inP) * 4;
+      }
+      c.style.opacity = o.toFixed(3); c.style.transform = `translateY(${y.toFixed(2)}cqh)`; c.style.visibility = o > .001 ? 'visible' : 'hidden';
+    });
+    pbars.forEach((b, k) => { b.style.width = (k < i ? 100 : k === i ? p * 100 : 0) + '%'; });
+    let bo = 0;
+    if (i === 4) { const r = document.getElementById('rng'); r.textContent = sa.range > sa.solid ? `${sa.solid} to ${sa.range}` : String(sa.solid); }
+    bigEl.style.opacity = (bo * clamp((S.e - T) / .3)).toFixed(3);
+  }
+
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.setViewOffset(w, h, 0, h * .12, w, h);
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(() => { resize(); render(t); }).observe(stage);
+
+  const audio = document.getElementById('vo');
+  let t = 0, playing = !RECORD, last = performance.now();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const playBtn = document.getElementById('play');
+  playBtn.onclick = () => { if (audio.paused) { audio.currentTime = t; audio.play().catch(() => {}); playing = true; playBtn.textContent = 'Pause'; } else { audio.pause(); playing = false; playBtn.textContent = 'Play with sound'; } };
+  document.getElementById('restart').onclick = () => { t = 0; audio.currentTime = 0; };
+  if (reduce && !RECORD) playing = false;
+  function loop(now) {
+    const dt = Math.min(.1, (now - last) / 1000); last = now;
+    if (playing) { if (!audio.paused) t = audio.currentTime; else { t += dt; if (t >= DUR) t = 0; } render(t); }
+    requestAnimationFrame(loop);
+  }
+  resize(); render(reduce ? 1.5 : 0);
+  if (!RECORD) requestAnimationFrame(loop);
+  window.__render = T => render(T); window.__DUR = DUR;
+})();
+</script>
