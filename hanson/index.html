@@ -112,6 +112,7 @@ body.record .controls { display: none; }
 <audio id="vo" src="voiceover/vo.mp3" preload="auto"></audio>
 
 <script src="amp.js"></script>
+<script src="portraits.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (() => {
@@ -254,6 +255,17 @@ body.record .controls { display: none; }
   head.add(hair);
   H.scale.setScalar(1);
   scene.add(H);
+  // AI-generated caricature portraits, shown as framed cards that stand in for the 3D figure
+  const PW = 2.0, PH = 2.2;
+  const P = new THREE.Group(), pCard = new THREE.Group(); P.add(pCard);
+  const frame = shadowed(new THREE.Mesh(new THREE.BoxGeometry(PW + .14, PH + .14, .1), std(ORANGE, { roughness: .45, emissive: ORANGE, emissiveIntensity: .25 })));
+  frame.position.set(0, PH / 2, -.06); pCard.add(frame);
+  const pTex = (window.__PORTRAITS || []).map(src => { const t = new THREE.Texture(); const im = new Image(); t.image = im;
+    t.ready = new Promise(r => { im.onload = () => { t.needsUpdate = true; r(); }; }); im.src = src; return t; });
+  window.__ready = Promise.all(pTex.map(t => t.ready));
+  const pMat = new THREE.MeshBasicMaterial({ map: pTex[0] || null, toneMapped: false });
+  const photo = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), pMat); photo.position.set(0, PH / 2, .001); pCard.add(photo);
+  scene.add(P);
   const qMark = label('?', { size: 150, color: '#f36c21', w: 200, h: 200 }); qMark.scale.set(1.4, 1.4, 1); scene.add(qMark);
 
   // ---------------- poll bars (left)
@@ -277,8 +289,13 @@ body.record .controls { display: none; }
   const pin = new THREE.Group();
   const pinHead = new THREE.Mesh(new THREE.SphereGeometry(.32, 24, 16), std(ORANGE, { emissive: ORANGE, emissiveIntensity: .4 })); pinHead.position.y = 1.0; pin.add(pinHead);
   const pinTip = new THREE.Mesh(new THREE.ConeGeometry(.2, .8, 20), std(ORANGE)); pinTip.position.y = .45; pinTip.rotation.x = Math.PI; pin.add(pinTip);
-  const pinLbl = label('WRIGHT · LIB ~8%', { size: 52, color: '#f4efe8', w: 640 }); pinLbl.scale.multiplyScalar(.6); pinLbl.position.y = 1.75; pin.add(pinLbl);
-  pin.position.set(HOR.x + 1.25, 0, HOR.z - .9); scene.add(pin);
+  const pinLbl = (() => { const w = 640, h = 160, c = document.createElement('canvas'); c.width = w; c.height = h; const tex = new THREE.CanvasTexture(c);
+    const draw = () => { const g = c.getContext('2d'); g.clearRect(0, 0, w, h); g.fillStyle = 'rgba(16,12,10,.88)'; g.beginPath(); g.roundRect ? g.roundRect(40, 30, w - 80, h - 60, 50) : g.rect(40, 30, w - 80, h - 60); g.fill();
+      g.strokeStyle = '#f36c21'; g.lineWidth = 6; g.stroke(); g.fillStyle = '#f4efe8'; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = '800 54px "Bricolage Grotesque", "Inter Display", "Inter", sans-serif'; g.fillText('WRIGHT · LIB ~8%', w / 2, h / 2 + 2); tex.needsUpdate = true; };
+    draw(); (document.fonts && document.fonts.ready || Promise.resolve()).then(draw);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false })); sp.scale.set(w / 160, h / 160, 1); return sp; })(); pinLbl.scale.multiplyScalar(.6); pinLbl.position.y = 3.05; pin.add(pinLbl);
+  pin.position.set(HOR.x - 1.45, 0, HOR.z - 1.1); scene.add(pin);
 
   // ---------------- the House: 150 seats in a hemicycle (back centre)
   const HC = new THREE.Vector3(0, 0, -5.2);
@@ -308,7 +325,7 @@ body.record .controls { display: none; }
   // ---------------- cameras per beat [pos start, look start, pos end, look end]
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
   const CAMS = [
-    [V(.2, 2.75, 6.2), V(0, 2.5, 1.2), V(1.2, 3.3, 10.6), V(0, 2.1, 0)],          // hook: face, pull back to Parliament
+    [V(.2, 3.1, 7.2), V(0, 2.75, 1.2), V(1.2, 3.6, 11.2), V(0, 2.5, 0)],          // hook: face, pull back to Parliament
     [V(-2.4, 3.6, 10.2), V(-4.2, 1.9, -.5), V(-3, 4.4, 11.2), V(-4.2, 2.1, -.5)],  // poll bars
     [V(5.9, 6.6, 15.8), V(6.4, 1.75, .4), V(6.9, 6.4, 15.2), V(6.6, 1.8, .4)],       // Senate → House
     [V(0, 15.5, 4.5), V(0, 0, -5.6), V(-1.2, 16.5, 4), V(0, 0, -5.8)],             // the House from above
@@ -360,7 +377,12 @@ body.record .controls { display: none; }
     const st = hansonAt(T);
     H.position.copy(st.pos); H.rotation.y = st.ry + Math.sin(T * .9) * .08;
     const sq = st.squash || 0;
-    H.scale.set(st.s * (1 + sq), st.s * (1 - sq), st.s * (1 + sq)); H.visible = st.s > .001;
+    H.scale.set(st.s * (1 + sq), st.s * (1 - sq), st.s * (1 + sq)); H.visible = false;
+    P.position.copy(st.pos); P.position.y += .25 + (i < 2 ? .7 : 0) + (i === 2 ? 0 : .12 * Math.sin(T * 1.6));
+    P.rotation.set(0, Math.sin(T * .7) * .14, Math.sin(T * 1.1) * .02 + (st.hop ? Math.sin(T * 9) * .08 : 0));
+    const talkS = 1 + ampAt(T) * .02;
+    P.scale.set(st.s * (1 + sq) * talkS, st.s * (1 - sq) * talkS, st.s); P.visible = st.s > .001;
+    const want = pTex[i < 2 ? 0 : i < 5 ? 1 : 2]; if (want && pMat.map !== want) { pMat.map = want; pMat.needsUpdate = true; }
     head.rotation.set(-.05 + Math.sin(T * 2.3) * .04 + amp * .08, Math.sin(T * 1.3) * .12, Math.sin(T * 1.7) * .05);
     head.position.y = 2.2 + amp * .03;
     mouth.scale.set(1 - amp * .15, .42 + amp * 1.2, 1); inner.scale.set(1.1, .15 + amp * .85, .3);
@@ -370,7 +392,7 @@ body.record .controls { display: none; }
     const talk = amp;
     arms[0].rotation.set(0, 0, -(.25 + (st.hop ? 1.9 : 0)));
     arms[1].rotation.set(-talk * .6 - Math.sin(T * 3.1) * .1 * (talk > .2), 0, .25 + (st.hop ? 1.9 : 1.1 * clamp(talk * 1.6) + .2 * Math.sin(T * 2.2)));
-    qMark.position.set(H.position.x + 1.25, 3.3 + Math.sin(T * 3) * .1, H.position.z); qMark.material.opacity = i === 5 ? clamp((T - B[5] - .5) / .3) : 0;
+    qMark.position.set(H.position.x + 1.45, 3.3 + Math.sin(T * 3) * .1, H.position.z); qMark.material.opacity = i === 5 ? clamp((T - B[5] - .5) / .3) : 0;
     pop.position.set(H.position.x, 3, H.position.z + 2); pop.intensity = i === 0 ? 4 * Math.exp(-T * 2.5) + .6 : i === 5 ? 1.2 : .4;
 
     // poll bars rise on the poll beat (and stay)
