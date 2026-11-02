@@ -81,6 +81,9 @@ h1 em, h2 em { font-style: normal; color: var(--gold); }
 
 .hook h1 { font-size: 12.4cqw; line-height: .92; }
 .hook.long h1 { font-size: 10.2cqw; }
+.hook.mort h1 { font-size: 9cqw; }
+.hook .mega { display: block; font-size: 14.2cqw; line-height: .86; letter-spacing: -.04em; text-transform: uppercase; color: var(--ink); margin-bottom: 1.2cqh; }
+.hook .sub:empty { display: none; }
 .hook .sub, .r .sub { font-size: 4.6cqw; color: var(--ink); margin: 0; font-weight: 500; }
 .hook .sub { font-family: var(--mono); font-size: 3.4cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
 .r .num { font-size: 26cqw; font-weight: 800; line-height: .78; color: var(--gold); letter-spacing: -.05em; }
@@ -107,6 +110,7 @@ body.record .controls { display: none; }
 
 <div class="stage" id="stage">
   <canvas id="gl" aria-hidden="true"></canvas>
+  <img id="albo" src="photos/albanese-grin.jpg" alt="" hidden>
   <div class="vignette"></div>
   <div class="progress" id="progress"></div>
   <div class="top"><span class="mark"><i></i>Canberra explainer</span><span class="handle">@osherfeldman</span></div>
@@ -141,10 +145,11 @@ body.record .controls { display: none; }
   const RECORD = /[?&]record\b/.test(location.search) || window.__RECORD;
   if (RECORD) document.body.classList.add('record');
   // Which way did the RBA go on 3 Nov? 'hike' (default), 'hold', or 'pre' (posting before the decision)
-  let VARIANT = (location.search.match(/[?&]v=(hike|hold|pre|any)/) || [])[1] || window.__VARIANT || 'hike';
+  let VARIANT = (location.search.match(/[?&]v=(hike|hold|pre|any|mort)/) || [])[1] || window.__VARIANT || 'hike';
   const HOOK = {
     hike: ['Rates just went up. <em class="red">Again.</em>', '5th hike this year. Labor\'s fingerprints are all over it.'],
     hold: ['Rates held. <em>For now.</em>', 'Labor\'s fingerprints are all over this year\'s 4 hikes.'],
+    mort: ['<span class="mega">Your mortgage</span> has <em class="red">Labor\'s fingerprints</em> all over it.', ''],
     any:  ['Any rate hike has <em class="red">Labor\'s fingerprints</em> all over it.', 'Rates are at their highest in 15 years.'],
     pre:  ['Tomorrow\'s likely rate rise has <em class="red">Labor\'s fingerprints</em> all over it.', 'It would be the 5th hike this year.'],
   };
@@ -222,6 +227,13 @@ body.record .controls { display: none; }
   band.position.set(INF_X, IK * 2.5, INF_Z); scene.add(band);
   const bandLbl = label('Target 2–3%', { size: 46, weight: 500, font: 'IBM Plex Mono', color: '#7fe0b0' }); bandLbl.scale.multiplyScalar(.55); bandLbl.position.set(INF_X + .2, IK * 3 + .35, INF_Z + 2.2); scene.add(bandLbl);
   const infLbl = label('4.3%', { size: 72, color: '#ff6b5e' }); infLbl.scale.multiplyScalar(.6); scene.add(infLbl);
+  // ---- photo backdrop (mort cut): Albanese, large, behind the rate chart
+  const photoImg = document.getElementById('albo');
+  const photoTex = new THREE.Texture(photoImg);
+  const markPhoto = () => { photoTex.needsUpdate = true; };
+  if (photoImg.complete) markPhoto(); else photoImg.addEventListener('load', markPhoto);
+  const photo = new THREE.Mesh(new THREE.PlaneGeometry(7.2, 4.8), new THREE.MeshBasicMaterial({ map: photoTex, transparent: true, opacity: 0, fog: false }));
+  photo.position.set(2.5, 3.1, -4.4); photo.rotation.y = .59; scene.add(photo);
   // ---- 4. the house (front)
   const house = new THREE.Group();
   const wallMat = new THREE.MeshStandardMaterial({ color: 0xe9e2d0, roughness: .8 });
@@ -250,7 +262,7 @@ body.record .controls { display: none; }
     [V(2.2, 2.2, 6.8), V(.3, -.5, 2), V(1.4, 2.6, 7.6), V(.3, -.3, 2)],           // the house, everything looming behind
     [V(0, 11, 17), V(.2, 1.6, -1), V(-9, 10, 13.5), V(.2, 1.6, -1)],               // end: wide
   ];
-  function camFor(i, p) { const c = CAMS[i], e = ease(p); return [c[0].clone().lerp(c[2], e), c[1].clone().lerp(c[3], e)]; }
+  function camFor(i, p) { const c = CAMS[i], e = ease(p); const r = [c[0].clone().lerp(c[2], e), c[1].clone().lerp(c[3], e)]; if (i === 0 && VARIANT === 'mort') r[1].y += 1.1; return r; }
 
   // ---- scene state as pure functions of T
   function barState(k, T) {
@@ -277,7 +289,7 @@ body.record .controls { display: none; }
   const bigEl = document.getElementById('big'), bigV = document.getElementById('bigv'), bigL = document.getElementById('bigl');
 
   function setVariant(v) {
-    VARIANT = v; document.querySelector('.hook').classList.toggle('long', v === 'pre' || v === 'any'); document.getElementById('hookH').innerHTML = HOOK[v][0]; document.getElementById('hookS').textContent = HOOK[v][1];
+    VARIANT = v; document.querySelector('.hook').classList.toggle('long', v === 'pre' || v === 'any'); document.querySelector('.hook').classList.toggle('mort', v === 'mort'); document.getElementById('hookH').innerHTML = HOOK[v][0]; document.getElementById('hookS').textContent = HOOK[v][1];
     document.getElementById('variant').textContent = 'Ending: ' + v;
   }
   setVariant(VARIANT);
@@ -303,7 +315,7 @@ body.record .controls { display: none; }
       b.mat.opacity = st.op; b.mat.wireframe = st.ghost; b.mesh.visible = st.op > .001;
       b.top.position.set(b.x, h + st.y + .35, b.z); b.top.material.opacity = i === 0 ? 0 : st.op;
       if (k === 4 && VARIANT === 'pre') { b.top.material.opacity = st.op * 2; }
-      b.bot.material.opacity = (k === 4 && (VARIANT === 'hold' || VARIANT === 'any') ? .35 : 1);
+      b.bot.material.opacity = (k === 4 && (VARIANT === 'hold' || VARIANT === 'any' || VARIANT === 'mort') ? .35 : 1);
       // focus: dim the chart during beats about other things
       const dim = (i === 1 || i === 4) ? .35 : 1;
       if (!st.ghost) b.mat.opacity = st.op * dim;
@@ -333,6 +345,7 @@ body.record .controls { display: none; }
     redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = i === 4 ? 2.4 * clamp((T - B[4] - .9) / .6) : i === 0 ? 2 * shake : 0;
     // house: lights dim through the chalmers beat and the ending
     winMat.emissiveIntensity = i >= 5 ? lerp(1, .15, clamp((T - B[5] - .8) / 1.6)) : 1;
+    photo.material.opacity = VARIANT === 'mort' ? (i === 0 ? 1 : i === 1 ? 1 - clamp(local / .6) : 0) : 0; photo.visible = photo.material.opacity > .001;
     dust.rotation.y = T * .03;
     renderer.render(scene, camera);
 
@@ -358,6 +371,7 @@ body.record .controls { display: none; }
       else if (VARIANT === 'any') { bigV.textContent = base.toFixed(2) + '%'; bigL.textContent = 'Highest rates in 15 years'; bigV.classList.toggle('red', T > .66); }
       else { bigV.textContent = base.toFixed(2) + '%'; bigL.textContent = 'Cash rate · highest in 15 years'; bigV.classList.remove('red'); }
     }
+    if (VARIANT === 'mort') bo = 0;
     bigEl.style.opacity = (bo * clamp((S.e - T) / .3)).toFixed(3);
     document.getElementById('follow').style.opacity = (i === 6 ? clamp((T - B[6] - .9) / .4) : 0).toFixed(3);
   }
@@ -376,7 +390,7 @@ body.record .controls { display: none; }
   function setPlaying(v) { playing = v; playBtn.textContent = v ? 'Pause' : 'Play'; playBtn.setAttribute('aria-pressed', String(v)); last = performance.now(); }
   playBtn.onclick = () => setPlaying(!playing);
   document.getElementById('restart').onclick = () => { t = 0; setPlaying(true); };
-  document.getElementById('variant').onclick = () => { const o = ['hike', 'hold', 'pre', 'any']; setVariant(o[(o.indexOf(VARIANT) + 1) % 3]); t = 0; render(t); };
+  document.getElementById('variant').onclick = () => { const o = ['hike', 'hold', 'pre', 'any', 'mort']; setVariant(o[(o.indexOf(VARIANT) + 1) % 3]); t = 0; render(t); };
   if (reduce && !RECORD) setPlaying(false);
   function loop(now) { const dt = Math.min(.1, (now - last) / 1000); last = now; if (playing) { t += dt; if (t >= DUR) t = 0; render(t); } requestAnimationFrame(loop); }
   resize(); render(reduce ? 2.5 : 0);
