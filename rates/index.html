@@ -141,10 +141,11 @@ body.record .controls { display: none; }
   const RECORD = /[?&]record\b/.test(location.search) || window.__RECORD;
   if (RECORD) document.body.classList.add('record');
   // Which way did the RBA go on 3 Nov? 'hike' (default), 'hold', or 'pre' (posting before the decision)
-  let VARIANT = (location.search.match(/[?&]v=(hike|hold|pre)/) || [])[1] || window.__VARIANT || 'hike';
+  let VARIANT = (location.search.match(/[?&]v=(hike|hold|pre|any)/) || [])[1] || window.__VARIANT || 'hike';
   const HOOK = {
     hike: ['Rates just went up. <em class="red">Again.</em>', '5th hike this year. Labor\'s fingerprints are all over it.'],
     hold: ['Rates held. <em>For now.</em>', 'Labor\'s fingerprints are all over this year\'s 4 hikes.'],
+    any:  ['Any rate hike has <em class="red">Labor\'s fingerprints</em> all over it.', 'Rates are at their highest in 15 years.'],
     pre:  ['Tomorrow\'s likely rate rise has <em class="red">Labor\'s fingerprints</em> all over it.', 'It would be the 5th hike this year.'],
   };
 
@@ -273,7 +274,7 @@ body.record .controls { display: none; }
   const bigEl = document.getElementById('big'), bigV = document.getElementById('bigv'), bigL = document.getElementById('bigl');
 
   function setVariant(v) {
-    VARIANT = v; document.querySelector('.hook').classList.toggle('long', v === 'pre'); document.getElementById('hookH').innerHTML = HOOK[v][0]; document.getElementById('hookS').textContent = HOOK[v][1];
+    VARIANT = v; document.querySelector('.hook').classList.toggle('long', v === 'pre' || v === 'any'); document.getElementById('hookH').innerHTML = HOOK[v][0]; document.getElementById('hookS').textContent = HOOK[v][1];
     document.getElementById('variant').textContent = 'Ending: ' + v;
   }
   setVariant(VARIANT);
@@ -297,7 +298,7 @@ body.record .controls { display: none; }
       b.mat.opacity = st.op; b.mat.wireframe = st.ghost; b.mesh.visible = st.op > .001;
       b.top.position.set(b.x, h + st.y + .35, b.z); b.top.material.opacity = i === 0 ? 0 : st.op;
       if (k === 4 && VARIANT === 'pre') { b.top.material.opacity = st.op * 2; }
-      b.bot.material.opacity = (k === 4 && VARIANT === 'hold' ? .35 : 1);
+      b.bot.material.opacity = (k === 4 && (VARIANT === 'hold' || VARIANT === 'any') ? .35 : 1);
       // focus: dim the chart during beats about other things
       const dim = (i === 1 || i === 4) ? .35 : 1;
       if (!st.ghost) b.mat.opacity = st.op * dim;
@@ -347,6 +348,7 @@ body.record .controls { display: none; }
       bo = 1;
       if (VARIANT === 'hike') { const v = T < .8 ? 4.60 : lerp(4.60, 4.85, clamp((T - .8) / .5)); bigV.textContent = v.toFixed(2) + '%'; bigL.textContent = 'Cash rate · highest in 15 years'; bigV.classList.toggle('red', T > 1.1); }
       else if (VARIANT === 'pre') { bigV.textContent = '4.85%?'; bigL.textContent = 'Tipped for Tuesday'; bigV.classList.add('red'); }
+      else if (VARIANT === 'any') { bigV.textContent = '15 yrs'; bigL.textContent = 'Rates at their highest'; bigV.classList.add('red'); }
       else { bigV.textContent = '4.60%'; bigL.textContent = 'Cash rate · highest in 15 years'; bigV.classList.remove('red'); }
     }
     bigEl.style.opacity = (bo * clamp((S.e - T) / .3)).toFixed(3);
@@ -367,7 +369,7 @@ body.record .controls { display: none; }
   function setPlaying(v) { playing = v; playBtn.textContent = v ? 'Pause' : 'Play'; playBtn.setAttribute('aria-pressed', String(v)); last = performance.now(); }
   playBtn.onclick = () => setPlaying(!playing);
   document.getElementById('restart').onclick = () => { t = 0; setPlaying(true); };
-  document.getElementById('variant').onclick = () => { const o = ['hike', 'hold', 'pre']; setVariant(o[(o.indexOf(VARIANT) + 1) % 3]); t = 0; render(t); };
+  document.getElementById('variant').onclick = () => { const o = ['hike', 'hold', 'pre', 'any']; setVariant(o[(o.indexOf(VARIANT) + 1) % 3]); t = 0; render(t); };
   if (reduce && !RECORD) setPlaying(false);
   function loop(now) { const dt = Math.min(.1, (now - last) / 1000); last = now; if (playing) { t += dt; if (t >= DUR) t = 0; render(t); } requestAnimationFrame(loop); }
   resize(); render(reduce ? 2.5 : 0);
