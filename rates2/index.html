@@ -156,12 +156,20 @@ body.record .controls { display: none; }
 
   // beats timed to the narration take (each starts as Charlie starts the line)
   // beats timed to the narration take (each starts as Charlie starts the line)
-  const SCENES = [
+  // two cuts from one take: 'regular' (as narrated) and 'trial' (opens on the PM line, then the rest)
+  const MODE = (window.__VARIANT === 'trial' || /[?&]v=trial/.test(location.search)) ? 'trial' : 'regular';
+  const SCENES = MODE === 'trial' ? [
+    { s: 0, e: 2.1 }, { s: 2.1, e: 7.25 }, { s: 7.25, e: 12.3 }, { s: 12.3, e: 14.9 },
+    { s: 14.9, e: 17.65 }, { s: 17.65, e: 21.1 }, { s: 21.1, e: 25.6 }
+  ] : [
     { s: 0, e: 5.15 }, { s: 5.15, e: 10.3 }, { s: 10.3, e: 12.9 }, { s: 12.9, e: 15.5 },
     { s: 15.5, e: 18.25 }, { s: 18.25, e: 21.7 }, { s: 21.7, e: 26.2 }
   ];
-  const DUR = 26.2;
-  const B = SCENES.map(x => x.s);
+  const DUR = SCENES[SCENES.length - 1].e;
+  // role of each scene: 0 rates hook, 1 $456, 2 the PM, 3 housing, 4 spending, 5 Chalmers, 6 call to action
+  const ORDER = MODE === 'trial' ? [2, 0, 1, 3, 4, 5, 6] : [0, 1, 2, 3, 4, 5, 6];
+  const RB = []; ORDER.forEach((r, idx) => { RB[r] = SCENES[idx].s; });
+  const B = RB;
   const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
   const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
   const easeOut = t => 1 - Math.pow(1 - t, 3);
@@ -285,6 +293,7 @@ body.record .controls { display: none; }
 
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), pos = new THREE.Vector3(), scl = new THREE.Vector3(1, 1, 1);
   const cards = [...document.querySelectorAll('.card')];
+  if (MODE === 'trial') { cards[2].querySelector('h2').innerHTML = 'The PM? <em>In the Caribbean.</em>'; cards[2].querySelector('.sub').textContent = 'As rates hit an 18-year high.'; }
   const progress = document.getElementById('progress');
   SCENES.forEach(() => { const s = document.createElement('span'); s.appendChild(document.createElement('b')); progress.appendChild(s); });
   const pbars = [...progress.querySelectorAll('b')];
@@ -298,10 +307,10 @@ body.record .controls { display: none; }
 
   function render(T) {
     T = clamp(T, 0, DUR - 1e-3);
-    const i = sceneAt(T), S = SCENES[i], local = T - S.s, p = clamp(local / (S.e - S.s));
+    const i = sceneAt(T), S = SCENES[i], local = T - S.s, p = clamp(local / (S.e - S.s)), role = ORDER[i];
     const blend = i > 0 ? ease(clamp(local / .6)) : 1;
-    let [cp, cl] = camFor(i, p);
-    if (blend < 1) { const [pp, pl] = camFor(i - 1, 1); cp = pp.lerp(cp, blend); cl = pl.lerp(cl, blend); }
+    let [cp, cl] = camFor(role, p);
+    if (blend < 1) { const [pp, pl] = camFor(ORDER[i - 1], 1); cp = pp.lerp(cp, blend); cl = pl.lerp(cl, blend); }
     // camera shake when the 5th bar lands
     const lands = VARIANT === 'hike' ? [...LAND, 1.25] : LAND;
     const shake = lands.reduce((a, L, n) => a + (T > L ? Math.exp(-(T - L) * 10) * (n === 4 ? 1.4 : .7) : 0), 0);
@@ -315,13 +324,13 @@ body.record .controls { display: none; }
       const h = Math.max(.001, st.h);
       b.mesh.scale.set(1, h, 1); b.mesh.position.y = h / 2 + st.y;
       b.mat.opacity = st.op; b.mat.wireframe = st.ghost; b.mesh.visible = st.op > .001;
-      b.top.position.set(b.x, h + st.y + .35, b.z); b.top.material.opacity = i === 0 ? 0 : st.op;
+      b.top.position.set(b.x, h + st.y + .35, b.z); b.top.material.opacity = role === 0 ? 0 : st.op;
       if (k === 4 && VARIANT === 'pre') { b.top.material.opacity = st.op * 2; }
       b.bot.material.opacity = (k === 4 && (VARIANT === 'hold' || VARIANT === 'any' || VARIANT === 'mort') ? .35 : 1);
       // focus: dim the chart during beats about other things
-      const dim = (i === 1 || i === 3 || i === 4) ? .35 : 1;
+      const dim = (role === 1 || role === 3 || role === 4) ? .35 : 1;
       if (!st.ghost) b.mat.opacity = st.op * dim;
-      b.top.material.opacity *= dim * (i === 2 ? 0 : 1);
+      b.top.material.opacity *= dim * (role === 2 ? 0 : 1);
     });
     // coins
     const n = coinsAt(T);
@@ -335,38 +344,38 @@ body.record .controls { display: none; }
       m4.compose(pos, q, scl); coinMesh.setMatrixAt(k, m4);
     }
     coinMesh.instanceMatrix.needsUpdate = true;
-    coinMat.emissiveIntensity = i === 1 ? .8 : .3;
-    goldLight.position.set(COIN_X - 1.6, .055 + n * .11 + .6, COIN_Z + 1.8); goldLight.intensity = i === 1 ? 3 : 0;
+    coinMat.emissiveIntensity = role === 1 ? .8 : .3;
+    goldLight.position.set(COIN_X - 1.6, .055 + n * .11 + .6, COIN_Z + 1.8); goldLight.intensity = role === 1 ? 3 : 0;
     spendLabel.position.set(COIN_X, .055 + n * .11 + .5, COIN_Z);
-    spendLabel.material.opacity = i === 1 ? clamp((local - 2.9) / .4) : i > 1 ? .7 : 0;
+    spendLabel.material.opacity = role === 1 ? clamp((local - 2.9) / .4) : T > B[1] ? .7 : 0;
     // inflation
     const ih = infAt(T) * IK;
     inf.scale.y = ih; inf.position.y = ih / 2;
-    infLbl.position.set(INF_X, ih + .45, INF_Z); infLbl.material.opacity = i >= 4 ? clamp((T - B[4] - .7) / .4) : 0;
-    band.material.opacity = i === 4 ? .32 : .16; bandLbl.material.opacity = i === 4 ? 1 : .45;
-    redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = i === 4 ? 2.4 * clamp((T - B[4] - .5) / .6) : i === 0 ? 2 * shake : 0;
+    infLbl.position.set(INF_X, ih + .45, INF_Z); infLbl.material.opacity = T >= B[4] ? clamp((T - B[4] - .7) / .4) : 0;
+    band.material.opacity = role === 4 ? .32 : .16; bandLbl.material.opacity = role === 4 ? 1 : .45;
+    redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = role === 4 ? 2.4 * clamp((T - B[4] - .5) / .6) : T < 1.6 ? 2 * shake : 0;
     // house: lights dim through the chalmers beat and the ending
-    winMat.emissiveIntensity = i >= 3 ? lerp(1, .12, clamp((T - B[3] - .6) / 1.4)) : 1;
-    house.position.y = i >= 3 ? -.32 * ease(clamp((T - B[3] - .4) / 1.6)) : 0;
-    photo.material.opacity = i === 2 ? clamp(local / .35) : i === 3 ? 1 - clamp(local / .5) : 0; photo.visible = photo.material.opacity > .001;
+    winMat.emissiveIntensity = T >= B[3] ? lerp(1, .12, clamp((T - B[3] - .6) / 1.4)) : 1;
+    house.position.y = T >= B[3] ? -.32 * ease(clamp((T - B[3] - .4) / 1.6)) : 0;
+    photo.material.opacity = role === 2 ? (i === 0 ? 1 : clamp(local / .35)) : (i > 0 && ORDER[i - 1] === 2 ? 1 - clamp(local / .5) : 0); photo.visible = photo.material.opacity > .001;
     dust.rotation.y = T * .03;
     renderer.render(scene, camera);
 
     // DOM
     cards.forEach((c, k) => {
       let o = 0, y = 0;
-      if (k === i) {
-        const inP = k === 0 ? 1 : easeOut(clamp((local - .15) / .4));
-        const outP = k === SCENES.length - 1 ? 1 : clamp((S.e - T - .02) / .3);
+      if (k === role) {
+        const inP = i === 0 ? 1 : easeOut(clamp((local - .15) / .4));
+        const outP = i === SCENES.length - 1 ? 1 : clamp((S.e - T - .02) / .3);
         o = Math.min(inP, outP); y = (1 - inP) * 4;
       }
-      c.style.opacity = o.toFixed(3); const pz = k === 0 ? 1 + .07 * (1 - easeOut(clamp(T / .35))) : 1;
+      c.style.opacity = o.toFixed(3); const pz = i === 0 && k === role ? 1 + .07 * (1 - easeOut(clamp(T / .35))) : 1;
       c.style.transform = `translateY(${y.toFixed(2)}cqh) scale(${pz.toFixed(4)})`; c.style.transformOrigin = 'left bottom'; c.style.visibility = o > .001 ? 'visible' : 'hidden';
     });
     pbars.forEach((b, k) => { b.style.width = (k < i ? 100 : k === i ? p * 100 : 0) + '%'; });
     // big rate readout: ticks up in the hook
     let bo = 0;
-    if (i === 0) {
+    if (role === 0) {
       bo = 1;
       const landed = LAND.filter(L => T >= L).length, base = landed ? RATES[landed - 1][1] : 3.60;
       if (VARIANT === 'hike') { const v = T < 1.25 ? base : 4.85; bigV.textContent = v.toFixed(2) + '%'; bigL.textContent = '18-year high'; bigV.classList.toggle('red', T > 1.25); }
@@ -374,9 +383,9 @@ body.record .controls { display: none; }
       else if (VARIANT === 'any') { bigV.textContent = base.toFixed(2) + '%'; bigL.textContent = 'Highest rates in 15 years'; bigV.classList.toggle('red', T > .66); }
       else { bigV.textContent = base.toFixed(2) + '%'; bigL.textContent = 'Cash rate · highest in 15 years'; bigV.classList.remove('red'); }
     }
-    if (i === 1) { bo = 1; bigV.textContent = '+$' + Math.round(456 * easeOut(clamp((local - .3) / 1.6))); bigL.textContent = 'a month · $600k loan · 5 hikes'; bigV.classList.add('red'); }
-    bigEl.style.opacity = (bo * clamp((S.e - T) / .3) * (i === 1 ? clamp((local - .2) / .3) : 1)).toFixed(3);
-    document.getElementById('follow').style.opacity = (i === 6 ? clamp((T - B[6] - .9) / .4) : 0).toFixed(3);
+    if (role === 1) { bo = 1; bigV.textContent = '+$' + Math.round(456 * easeOut(clamp((local - .3) / 1.6))); bigL.textContent = 'a month · $600k loan · 5 hikes'; bigV.classList.add('red'); }
+    bigEl.style.opacity = (bo * clamp((S.e - T) / .3) * (role === 1 ? clamp((local - .2) / .3) : 1)).toFixed(3);
+    document.getElementById('follow').style.opacity = (role === 6 ? clamp((T - B[6] - .9) / .4) : 0).toFixed(3);
   }
 
   function resize() {
