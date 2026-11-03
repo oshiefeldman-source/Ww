@@ -1,0 +1,403 @@
+<title>Rates Hit 4.85%</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 9:16 reel frame; 3D rate-hike chart, spending coin stack and inflation column behind; captions in the lower third. */
+:root {
+  --field: #0b1410;        /* night over Canberra, green-biased black */
+  --chamber: #1f4a36;      /* House of Reps green leather */
+  --ink: #f2efe6;          /* caption white */
+  --ink-dim: #a9b8ae;
+  --gold: #e3b54a;         /* Governor-General / emphasis */
+  --labor: #d8343a;
+  --coalition: #2f6fd1;
+  --cross: #8fa59a;
+  --display: "Bricolage Grotesque", "Inter Display", "Arial Narrow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--display);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+.stage {
+  position: relative;
+  height: calc(100% - 64px);
+  aspect-ratio: 9 / 16;
+  max-width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 30%, #173528 0%, var(--field) 70%);
+  container-type: size;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(227,181,74,.12);
+}
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.vignette { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(11,20,16,.9) 0%, rgba(11,20,16,.55) 14%, rgba(11,20,16,0) 22%, rgba(11,20,16,0) 31%, rgba(11,20,16,.9) 46%, rgba(11,20,16,.95) 62%, rgba(11,20,16,.97) 100%); }
+
+.top { position: absolute; left: 11cqw; right: 11cqw; top: 12.5cqh; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); }
+.top .handle { text-transform: none; letter-spacing: .06em; color: var(--ink); }
+.follow { position: absolute; left: 11cqw; right: 11cqw; top: 17cqh; display: flex; flex-direction: column; align-items: center; gap: 1.2cqh; opacity: 0; }
+.follow span { font-weight: 500; }
+.follow b { font-size: 6.4cqw; white-space: nowrap; font-weight: 800; letter-spacing: -.02em; color: var(--field); background: var(--gold); border-radius: 2.2cqw; padding: .6cqh 4cqw 1cqh; box-shadow: 0 2cqh 5cqh rgba(0,0,0,.55); }
+.top .mark { display: flex; gap: 1.6cqw; align-items: center; }
+.top .mark i { width: 2.2cqw; height: 2.2cqw; border-radius: 50%; background: var(--gold); display: inline-block; }
+.progress { position: absolute; left: 11cqw; right: 11cqw; top: 10.5cqh; display: flex; gap: 1cqw; }
+.progress span { flex: 1; height: .45cqw; min-height: 2px; border-radius: 2px; background: rgba(242,239,230,.18); overflow: hidden; }
+.progress span b { display: block; height: 100%; width: 0; background: var(--ink); }
+
+.card { position: absolute; left: 11cqw; right: 17cqw; bottom: 24cqh; display: flex; flex-direction: column; gap: 1.8cqh; opacity: 0; will-change: transform, opacity; }
+.eyebrow { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); display: flex; gap: 2cqw; align-items: center; }
+.eyebrow .n { border: 1px solid currentColor; border-radius: 99px; padding: .3cqh 2cqw; }
+h1, h2 { margin: 0; font-weight: 800; letter-spacing: -.02em; line-height: .95; text-wrap: balance; font-variation-settings: "opsz" 96; }
+h1 { font-size: 9.6cqw; }
+h2 { font-size: 8.4cqw; }
+h1 em, h2 em { font-style: normal; color: var(--gold); }
+.body { font-size: 3.7cqw; line-height: 1.32; color: var(--ink); font-weight: 400; margin: 0; max-width: 34ch; }
+.meta { display: grid; grid-template-columns: auto 1fr; gap: .8cqh 3cqw; font-size: 3cqw; border-top: 1px solid rgba(242,239,230,.18); padding-top: 1.8cqh; }
+.meta dt { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); padding-top: .4cqh; }
+.meta dd { margin: 0; color: var(--ink); line-height: 1.3; }
+.big { position: absolute; right: 17cqw; top: 17cqh; text-align: right; opacity: 0; font-variant-numeric: tabular-nums; text-shadow: 0 2px 18px rgba(11,20,16,.9), 0 0 4px rgba(11,20,16,.8); }
+.big .v { font-size: 16cqw; font-weight: 800; line-height: .9; letter-spacing: -.04em; }
+.big .l { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-dim); max-width: 40cqw; margin-left: auto; margin-top: 1cqh; }
+.legend { display: flex; gap: 4cqw; font-family: var(--mono); font-size: 2.6cqw; color: var(--ink-dim); letter-spacing: .08em; }
+.legend span { display: flex; align-items: center; gap: 1.4cqw; }
+.legend i { width: 2.4cqw; height: 2.4cqw; border-radius: 2px; display: inline-block; }
+.rank { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1.3cqh; }
+.rank li { display: grid; grid-template-columns: 1fr auto; gap: 3cqw; font-size: 3.6cqw; align-items: baseline; border-bottom: 1px solid rgba(242,239,230,.12); padding-bottom: 1.1cqh; }
+.rank li small { font-family: var(--mono); font-size: 2.6cqw; color: var(--ink-dim); letter-spacing: .1em; text-transform: uppercase; }
+.fine { font-family: var(--mono); font-size: 2.3cqw; color: var(--ink-dim); letter-spacing: .06em; line-height: 1.5; }
+
+.hook h1 { font-size: 12.4cqw; line-height: .92; }
+.hook.long h1 { font-size: 10.2cqw; }
+.hook.mort h1 { font-size: 9cqw; }
+.hook .mega { display: block; font-size: 14.2cqw; line-height: .86; letter-spacing: -.04em; text-transform: uppercase; color: var(--ink); margin-bottom: 1.2cqh; }
+.hook .sub:empty { display: none; }
+.hook .sub, .r .sub { font-size: 4.6cqw; color: var(--ink); margin: 0; font-weight: 500; }
+.hook .sub { font-family: var(--mono); font-size: 3.4cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
+.r .num { font-size: 26cqw; font-weight: 800; line-height: .78; color: var(--gold); letter-spacing: -.05em; }
+.r h2 { font-size: 11.5cqw; }
+.end h2 { font-size: 11cqw; }
+.end .cta { margin: 0; align-self: flex-start; font-size: 6.4cqw; font-weight: 800; color: var(--field); background: var(--ink); border-radius: 2cqw; padding: .4cqh 3.6cqw .8cqh; }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.controls button { font: 500 13px/1 var(--mono); color: var(--ink); background: rgba(242,239,230,.07); border: 1px solid rgba(242,239,230,.18);
+  border-radius: 99px; padding: 9px 14px; cursor: pointer; letter-spacing: .04em; }
+.controls button:hover { background: rgba(242,239,230,.14); }
+.controls button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.controls button[aria-pressed="true"] { border-color: var(--gold); color: var(--gold); }
+.controls .chips { display: flex; gap: 4px; }
+.controls .chips button { padding: 9px 10px; min-width: 34px; }
+body.record { padding: 0; gap: 0; }
+body.record .stage { height: 100%; border-radius: 0; box-shadow: none; }
+body.record .controls { display: none; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+.red { color: #ff6b5e; }
+.r h2 em, .hook h1 em, .end h2 em { color: var(--gold); }
+.hook h1 em.red, .r h2 em.red { color: #ff6b5e; }
+.big .v.red { color: #ff6b5e; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <img id="albo" src="photos/albo-thumbs.jpg" alt="" hidden>
+  <div class="vignette"></div>
+  <div class="progress" id="progress"></div>
+  <div class="top"><span class="mark"><i></i>Canberra explainer</span><span class="handle">@osherfeldman</span></div>
+  <div class="follow" id="follow"><b><span>Follow</span> @osherfeldman</b></div>
+  <div class="big" id="big"><div class="v" id="bigv">4.60%</div><div class="l" id="bigl">Cash rate</div></div>
+
+  <section class="card hook" data-scene="0">
+    <h1 id="hookH"></h1>
+    <p class="sub" id="hookS"></p>
+  </section>
+  <section class="card r" data-scene="1"><h2>That's <em class="red">$456 a month.</em></h2><p class="sub">Extra on a $600k loan since February. Five hikes.</p></section>
+  <section class="card r" data-scene="2"><h2>And the PM? <em>In the Caribbean.</em></h2><p class="sub">"Why are you here?" "Because His Majesty invited me."</p></section>
+  <section class="card r" data-scene="3"><h2>Housing: <em class="red">record slump</em> tipped.</h2><p class="sub">CBA forecasts a 14% fall. The RBA says government tax changes are part of it.</p></section>
+  <section class="card r" data-scene="4"><h2>Cut spending? <em>Won't say.</em></h2><p class="sub">Finance Minister Katy Gallagher wouldn't commit to net savings.</p></section>
+  <section class="card r" data-scene="5"><h2>Chalmers: <em>"difficult news."</em></h2><p class="sub">For families, it's a $456 problem.</p></section>
+  <section class="card end" data-scene="6">
+    <h2>Who's <em>to blame?</em></h2>
+    <p class="cta">Comment LABOR or RBA ↓</p>
+    <div class="fine">Opinion · Sources: RBA, ABC, SMH, news.com.au, Canstar · 3 Nov 2026 · File photo</div>
+  </section>
+</div>
+
+<div class="controls">
+  <button id="play" type="button" aria-pressed="true">Pause</button>
+  <button id="restart" type="button">Restart</button>
+  <button id="variant" type="button">Ending: hike</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const RECORD = /[?&]record\b/.test(location.search) || window.__RECORD;
+  if (RECORD) document.body.classList.add('record');
+  // Which way did the RBA go on 3 Nov? 'hike' (default), 'hold', or 'pre' (posting before the decision)
+  let VARIANT = 'hike';
+  const HOOK = {
+    hike: ['Rates just hit <em class="red">4.85%.</em>', '5th hike this year. Highest since 2008.'],
+    hold: ['Rates held. <em>For now.</em>', 'Labor\'s fingerprints are all over this year\'s 4 hikes.'],
+    mort: ['<span class="mega">Your mortgage</span> has <em class="red">Labor\'s fingerprints</em> all over it.', ''],
+    any:  ['Any rate hike has <em class="red">Labor\'s fingerprints</em> all over it.', 'Rates are at their highest in 15 years.'],
+    pre:  ['Tomorrow\'s likely rate rise has <em class="red">Labor\'s fingerprints</em> all over it.', 'It would be the 5th hike this year.'],
+  };
+
+  // beats timed to the narration take (each starts as Charlie starts the line)
+  // nominal beats; retimed to the narration once the take arrives
+  const SCENES = [
+    { s: 0, e: 3.6 }, { s: 3.6, e: 8 }, { s: 8, e: 12.2 }, { s: 12.2, e: 16.6 },
+    { s: 16.6, e: 20.6 }, { s: 20.6, e: 24.4 }, { s: 24.4, e: 28.4 }
+  ];
+  const DUR = 28.4;
+  const B = SCENES.map(x => x.s);
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  // a heavy drop: falls with gravity, then a small damped bounce
+  const drop = t => { if (t <= 0) return 0; if (t < .55) { const u = t / .55; return u * u; } const u = (t - .55) / .45; return 1 - Math.abs(Math.sin(u * Math.PI * 2.2)) * .06 * (1 - u); };
+  const sceneAt = t => { for (let i = SCENES.length - 1; i >= 0; i--) if (t >= SCENES[i].s) return i; return 0; };
+
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true, preserveDrawingBuffer: RECORD });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x0b1410, 16, 40);
+  const camera = new THREE.PerspectiveCamera(42, 9/16, .1, 100);
+  scene.add(new THREE.HemisphereLight(0xcfe6d8, 0x0b1410, .42));
+  const key = new THREE.DirectionalLight(0xfff1d6, 1.05); key.position.set(-6, 14, 9); key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024); Object.assign(key.shadow.camera, { left: -12, right: 12, top: 12, bottom: -12, near: 1, far: 40 });
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0x6fbf98, .5); rim.position.set(8, 5, -10); scene.add(rim);
+  const redLight = new THREE.PointLight(0xff4a3a, 0, 10, 2); scene.add(redLight);
+  const goldLight = new THREE.PointLight(0xffd27a, 0, 9, 2); scene.add(goldLight);
+
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(18, 64), new THREE.MeshStandardMaterial({ color: 0x0f2a1e, roughness: .95 }));
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+  // faint grid on the floor, like chart paper
+  const grid = new THREE.GridHelper(24, 24, 0x2b5a43, 0x1a3b2c); grid.position.y = .005; grid.material.transparent = true; grid.material.opacity = .5; scene.add(grid);
+
+  // text sprites
+  function label(text, { size = 64, color = '#f2efe6', weight = 800, font = 'Bricolage Grotesque', w = 512, h = 160 } = {}) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const tex = new THREE.CanvasTexture(c);
+    const draw = () => { const g = c.getContext('2d'); g.clearRect(0, 0, w, h); g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = `${weight} ${size}px "${font}", sans-serif`; g.fillText(text, w/2, h/2); tex.needsUpdate = true; };
+    draw(); (document.fonts && document.fonts.ready || Promise.resolve()).then(draw);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+    sp.scale.set(w / 160, h / 160, 1); return sp;
+  }
+
+  // ---- 1. rate-hike bar chart (right). Bars start at zero: height = rate * K
+  const K = .78, RATES = [['Feb', 3.85], ['Mar', 4.10], ['May', 4.35], ['Sep', 4.60], ['Nov', 4.85]];
+  const bars = RATES.map(([m, r], k) => {
+    const mat = new THREE.MeshStandardMaterial({ color: k === 4 ? 0xff4a3a : 0xd8343a, roughness: .45, metalness: .1, emissive: 0x400000, emissiveIntensity: k === 4 ? .6 : .2, transparent: true });
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(.78, 1, .78), mat);
+    mesh.castShadow = mesh.receiveShadow = true;
+    const x = 1.4 + k * 1.0, z = -.6;
+    mesh.position.set(x, 0, z); scene.add(mesh);
+    const top = label(r.toFixed(2) + '%', { size: 58 }); top.scale.multiplyScalar(.5); scene.add(top);
+    const bot = label(m, { size: 48, weight: 500, font: 'IBM Plex Mono', color: '#a9b8ae' }); bot.scale.multiplyScalar(.5); bot.position.set(x, .25, z + .75); scene.add(bot);
+    return { mesh, mat, top, bot, h: r * K, x, z };
+  });
+  // ---- 2. spending coin stack (left)
+  const COINS = 40, coinGeo = new THREE.CylinderGeometry(.62, .62, .11, 40);
+  const coinMat = new THREE.MeshStandardMaterial({ color: 0xe3b54a, metalness: .85, roughness: .28, emissive: 0x3a2a00, emissiveIntensity: .35 });
+  const coinMesh = new THREE.InstancedMesh(coinGeo, coinMat, COINS); coinMesh.castShadow = true; scene.add(coinMesh);
+  const COIN_X = -2.1, COIN_Z = -.4;
+  const coinJit = Array.from({ length: COINS }, (_, k) => [Math.sin(k * 12.9898) * .05, Math.cos(k * 78.233) * .05, k * .7]);
+  const spendLabel = label('+$456 a month', { size: 58, color: '#e3b54a' }); spendLabel.scale.multiplyScalar(.6); scene.add(spendLabel);
+  // ---- 3. inflation column (back left) with the 2–3% target band
+  const IK = 1.15, INF_X = -4.8, INF_Z = -3.6;
+  const infMat = new THREE.MeshStandardMaterial({ color: 0xff4a3a, roughness: .4, emissive: 0x5a0000, emissiveIntensity: .5 });
+  const inf = new THREE.Mesh(new THREE.CylinderGeometry(.42, .42, 1, 32), infMat); inf.castShadow = true; inf.position.set(INF_X, 0, INF_Z); scene.add(inf);
+  const band = new THREE.Mesh(new THREE.BoxGeometry(1.9, IK * 1, 1.9), new THREE.MeshStandardMaterial({ color: 0x5fd39a, transparent: true, opacity: .22, emissive: 0x2a7a55, emissiveIntensity: .4, depthWrite: false }));
+  band.position.set(INF_X, IK * 2.5, INF_Z); scene.add(band);
+  const bandLbl = label('Target 2–3%', { size: 46, weight: 500, font: 'IBM Plex Mono', color: '#7fe0b0' }); bandLbl.scale.multiplyScalar(.55); bandLbl.position.set(INF_X + .2, IK * 3 + .35, INF_Z + 2.2); scene.add(bandLbl);
+  const infLbl = label('4.3%', { size: 72, color: '#ff6b5e' }); infLbl.scale.multiplyScalar(.6); scene.add(infLbl);
+  // ---- photo backdrop (mort cut): Albanese, large, behind the rate chart
+  const photoImg = document.getElementById('albo');
+  const photoTex = new THREE.Texture(photoImg);
+  photoTex.repeat.set(.46, .9); photoTex.offset.set(.28, .1); // crop in on him
+  const markPhoto = () => { photoTex.needsUpdate = true; };
+  if (photoImg.complete) markPhoto(); else photoImg.addEventListener('load', markPhoto);
+  const photo = new THREE.Mesh(new THREE.PlaneGeometry(4.3, 4.6), new THREE.MeshBasicMaterial({ map: photoTex, transparent: true, opacity: 0, fog: false }));
+  photo.position.set(3.4, 2.7, .9); photo.rotation.y = .59; scene.add(photo);
+  // ---- 4. the house (front)
+  const house = new THREE.Group();
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0xe9e2d0, roughness: .8 });
+  const walls = new THREE.Mesh(new THREE.BoxGeometry(1.1, .8, .9), wallMat); walls.position.y = .4; walls.castShadow = walls.receiveShadow = true;
+  const roof = new THREE.Mesh(new THREE.ConeGeometry(.9, .55, 4), new THREE.MeshStandardMaterial({ color: 0x8a3a2a, roughness: .7 }));
+  roof.position.y = 1.07; roof.rotation.y = Math.PI / 4; roof.castShadow = true;
+  const winMat = new THREE.MeshStandardMaterial({ color: 0xffd27a, emissive: 0xffb84a, emissiveIntensity: 1 });
+  [-.25, .25].forEach(x => { const w = new THREE.Mesh(new THREE.PlaneGeometry(.22, .22), winMat); w.position.set(x, .45, .451); house.add(w); });
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(.2, .36), new THREE.MeshStandardMaterial({ color: 0x3a2a1a })); door.position.set(0, .18, .451);
+  house.add(walls, roof, door); house.position.set(.2, 0, 2.4); house.rotation.y = -.25; scene.add(house);
+
+  // dust
+  const dg = new THREE.BufferGeometry(), dp = new Float32Array(220 * 3);
+  for (let i = 0; i < 220; i++) { dp[i*3] = Math.sin(i * 3.1) * 10; dp[i*3+1] = (i * 37 % 90) / 10; dp[i*3+2] = Math.cos(i * 1.7) * 10; }
+  dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: 0xe3b54a, size: .045, transparent: true, opacity: .4 })); scene.add(dust);
+
+  // ---- cameras per beat [pos at start, look at start, pos at end, look at end]
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const CAMS = [
+    [V(10, 3.6, 9.2), V(3.4, 1.7, -.6), V(11, 4.4, 10.2), V(3.4, 1.7, -.6)],       // hook: rate bars from front-right
+    [V(-7.2, 3, 7.8), V(-2.1, 2.6, -.4), V(-6.8, 4.8, 8.6), V(-2.1, 3.8, -.4)],     // spending coins climb
+    [V(10, 3.6, 9.2), V(3.0, 2.8, -.6), V(11.2, 4.2, 10.4), V(3.0, 2.9, -.6)],   // the PM, thumbs up, behind the chart
+    [V(3, 2.8, 8.8), V(.3, -.1, 2), V(2, 3.2, 9.6), V(.3, .1, 2)],           // the house, everything looming behind
+    [V(-16.4, 4.6, 5.4), V(-4.8, 3.4, -3.6), V(-15.8, 5.4, 4), V(-4.8, 3.7, -3.6)], // inflation through the band
+    [V(2.6, 7.6, 10.8), V(3.4, 1.6, -.6), V(1.6, 8.4, 11.4), V(3.2, 1.6, -.6)],    // RBA: chart from above
+    [V(0, 11, 17), V(.2, 1.6, -1), V(-9, 10, 13.5), V(.2, 1.6, -1)],               // end: wide
+  ];
+  function camFor(i, p) { const c = CAMS[i], e = ease(p); const r = [c[0].clone().lerp(c[2], e), c[1].clone().lerp(c[3], e)]; if (i === 0 && VARIANT === 'mort') r[1].y += 1.1; return r; }
+
+  // ---- scene state as pure functions of T
+  function barState(k, T) {
+    // bars 0–3 already stand; in the hook they rise in quick succession, the 5th slams down at 1.1s (hike only)
+    let h = bars[k].h;
+    let op = 1;
+    if (k < 4) { const d = clamp((T - LAND[k] + .3) / .3 * .55); return { h, y: (1 - drop(d)) * 7, op: 1, ghost: false }; }
+    if (k === 4) {
+      if (VARIANT === 'hike') { const d = clamp((T - .95) / .3 * .55); h = bars[4].h; return { h, y: (1 - drop(d)) * 6, op: d > 0 ? 1 : 0, ghost: false }; }
+      return { h: bars[4].h, y: 0, op: VARIANT === 'pre' ? .6 + .3 * Math.sin(T * 5) : 0, ghost: true };
+    }
+    return { h, y: 0, op, ghost: false };
+  }
+  // landing times for the four 2026 hikes in the hook (drop lasts 0.3s; Feb starts before frame 0)
+  const LAND = [.12, .3, .48, .66];
+  const coinsAt = T => T < B[1] ? 6 : Math.round(lerp(6, COINS, easeOut(clamp((T - B[1] - .3) / 2.6))));
+  const infAt = T => T < B[4] ? 1.2 : lerp(1.2, 4.3, ease(clamp((T - B[4] - .5) / 1.8)));
+
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), pos = new THREE.Vector3(), scl = new THREE.Vector3(1, 1, 1);
+  const cards = [...document.querySelectorAll('.card')];
+  const progress = document.getElementById('progress');
+  SCENES.forEach(() => { const s = document.createElement('span'); s.appendChild(document.createElement('b')); progress.appendChild(s); });
+  const pbars = [...progress.querySelectorAll('b')];
+  const bigEl = document.getElementById('big'), bigV = document.getElementById('bigv'), bigL = document.getElementById('bigl');
+
+  function setVariant(v) {
+    VARIANT = v; document.querySelector('.hook').classList.toggle('long', v === 'pre' || v === 'any'); document.querySelector('.hook').classList.toggle('mort', v === 'mort'); document.getElementById('hookH').innerHTML = HOOK[v][0]; document.getElementById('hookS').textContent = HOOK[v][1];
+    document.getElementById('variant').textContent = 'Ending: ' + v;
+  }
+  setVariant(VARIANT);
+
+  function render(T) {
+    T = clamp(T, 0, DUR - 1e-3);
+    const i = sceneAt(T), S = SCENES[i], local = T - S.s, p = clamp(local / (S.e - S.s));
+    const blend = i > 0 ? ease(clamp(local / .6)) : 1;
+    let [cp, cl] = camFor(i, p);
+    if (blend < 1) { const [pp, pl] = camFor(i - 1, 1); cp = pp.lerp(cp, blend); cl = pl.lerp(cl, blend); }
+    // camera shake when the 5th bar lands
+    const lands = VARIANT === 'hike' ? [...LAND, 1.25] : LAND;
+    const shake = lands.reduce((a, L, n) => a + (T > L ? Math.exp(-(T - L) * 10) * (n === 4 ? 1.4 : .7) : 0), 0);
+    if (i === 0) cp.add(new THREE.Vector3(4.5, 3.2, 4.5).multiplyScalar(1 - easeOut(clamp(T / 1.1))));
+    cp.x += Math.sin(T * 90) * .06 * shake; cp.y += Math.cos(T * 77) * .06 * shake;
+    camera.position.copy(cp); camera.lookAt(cl);
+
+    // bars
+    bars.forEach((b, k) => {
+      const st = barState(k, T);
+      const h = Math.max(.001, st.h);
+      b.mesh.scale.set(1, h, 1); b.mesh.position.y = h / 2 + st.y;
+      b.mat.opacity = st.op; b.mat.wireframe = st.ghost; b.mesh.visible = st.op > .001;
+      b.top.position.set(b.x, h + st.y + .35, b.z); b.top.material.opacity = i === 0 ? 0 : st.op;
+      if (k === 4 && VARIANT === 'pre') { b.top.material.opacity = st.op * 2; }
+      b.bot.material.opacity = (k === 4 && (VARIANT === 'hold' || VARIANT === 'any' || VARIANT === 'mort') ? .35 : 1);
+      // focus: dim the chart during beats about other things
+      const dim = (i === 1 || i === 3 || i === 4) ? .35 : 1;
+      if (!st.ghost) b.mat.opacity = st.op * dim;
+      b.top.material.opacity *= dim * (i === 2 ? 0 : 1);
+    });
+    // coins
+    const n = coinsAt(T);
+    for (let k = 0; k < COINS; k++) {
+      const [jx, jz, rot] = coinJit[k];
+      let y = .055 + k * .11;
+      const landT = B[1] + .3 + (k - 6) / (COINS - 6) * 2.6;
+      let s = k < n ? 1 : 0;
+      if (k >= 6 && T >= B[1]) { const d = clamp((T - landT + .25) / .25); y += (1 - d) * 1.2; s = d > 0 ? 1 : 0; }
+      pos.set(COIN_X + jx, y, COIN_Z + jz); q.setFromAxisAngle(new THREE.Vector3(0, 1, 0), rot); scl.setScalar(Math.max(.001, s));
+      m4.compose(pos, q, scl); coinMesh.setMatrixAt(k, m4);
+    }
+    coinMesh.instanceMatrix.needsUpdate = true;
+    coinMat.emissiveIntensity = i === 1 ? .8 : .3;
+    goldLight.position.set(COIN_X - 1.6, .055 + n * .11 + .6, COIN_Z + 1.8); goldLight.intensity = i === 1 ? 3 : 0;
+    spendLabel.position.set(COIN_X, .055 + n * .11 + .5, COIN_Z);
+    spendLabel.material.opacity = i === 1 ? clamp((local - 2.9) / .4) : i > 1 ? .7 : 0;
+    // inflation
+    const ih = infAt(T) * IK;
+    inf.scale.y = ih; inf.position.y = ih / 2;
+    infLbl.position.set(INF_X, ih + .45, INF_Z); infLbl.material.opacity = i >= 4 ? clamp((T - B[4] - 1.1) / .4) : 0;
+    band.material.opacity = i === 4 ? .32 : .16; bandLbl.material.opacity = i === 4 ? 1 : .45;
+    redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = i === 4 ? 2.4 * clamp((T - B[4] - .9) / .6) : i === 0 ? 2 * shake : 0;
+    // house: lights dim through the chalmers beat and the ending
+    winMat.emissiveIntensity = i >= 3 ? lerp(1, .12, clamp((T - B[3] - .6) / 1.4)) : 1;
+    house.position.y = i >= 3 ? -.32 * ease(clamp((T - B[3] - .4) / 1.6)) : 0;
+    photo.material.opacity = i === 2 ? clamp(local / .35) : i === 3 ? 1 - clamp(local / .5) : 0; photo.visible = photo.material.opacity > .001;
+    dust.rotation.y = T * .03;
+    renderer.render(scene, camera);
+
+    // DOM
+    cards.forEach((c, k) => {
+      let o = 0, y = 0;
+      if (k === i) {
+        const inP = k === 0 ? 1 : easeOut(clamp((local - .15) / .4));
+        const outP = k === SCENES.length - 1 ? 1 : clamp((S.e - T - .02) / .3);
+        o = Math.min(inP, outP); y = (1 - inP) * 4;
+      }
+      c.style.opacity = o.toFixed(3); const pz = k === 0 ? 1 + .07 * (1 - easeOut(clamp(T / .35))) : 1;
+      c.style.transform = `translateY(${y.toFixed(2)}cqh) scale(${pz.toFixed(4)})`; c.style.transformOrigin = 'left bottom'; c.style.visibility = o > .001 ? 'visible' : 'hidden';
+    });
+    pbars.forEach((b, k) => { b.style.width = (k < i ? 100 : k === i ? p * 100 : 0) + '%'; });
+    // big rate readout: ticks up in the hook
+    let bo = 0;
+    if (i === 0) {
+      bo = 1;
+      const landed = LAND.filter(L => T >= L).length, base = landed ? RATES[landed - 1][1] : 3.60;
+      if (VARIANT === 'hike') { const v = T < 1.25 ? base : 4.85; bigV.textContent = v.toFixed(2) + '%'; bigL.textContent = '18-year high'; bigV.classList.toggle('red', T > 1.25); }
+      else if (VARIANT === 'pre') { bigV.textContent = T < .66 ? base.toFixed(2) + '%' : '4.85%?'; bigL.textContent = 'Tipped for Tuesday'; bigV.classList.add('red'); }
+      else if (VARIANT === 'any') { bigV.textContent = base.toFixed(2) + '%'; bigL.textContent = 'Highest rates in 15 years'; bigV.classList.toggle('red', T > .66); }
+      else { bigV.textContent = base.toFixed(2) + '%'; bigL.textContent = 'Cash rate · highest in 15 years'; bigV.classList.remove('red'); }
+    }
+    if (i === 1) { bo = 1; bigV.textContent = '+$' + Math.round(456 * easeOut(clamp((local - .3) / 1.6))); bigL.textContent = 'a month · $600k loan · 5 hikes'; bigV.classList.add('red'); }
+    bigEl.style.opacity = (bo * clamp((S.e - T) / .3) * (i === 1 ? clamp((local - .2) / .3) : 1)).toFixed(3);
+    document.getElementById('follow').style.opacity = (i === 6 ? clamp((T - B[6] - .9) / .4) : 0).toFixed(3);
+  }
+
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.setViewOffset(w, h, 0, h * .12, w, h);
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(() => { resize(); render(t); }).observe(stage);
+
+  let t = 0, playing = !RECORD, last = performance.now();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const playBtn = document.getElementById('play');
+  function setPlaying(v) { playing = v; playBtn.textContent = v ? 'Pause' : 'Play'; playBtn.setAttribute('aria-pressed', String(v)); last = performance.now(); }
+  playBtn.onclick = () => setPlaying(!playing);
+  document.getElementById('restart').onclick = () => { t = 0; setPlaying(true); };
+  document.getElementById('variant').onclick = () => { const o = ['hike', 'hold', 'pre', 'any', 'mort']; setVariant(o[(o.indexOf(VARIANT) + 1) % 3]); t = 0; render(t); };
+  if (reduce && !RECORD) setPlaying(false);
+  function loop(now) { const dt = Math.min(.1, (now - last) / 1000); last = now; if (playing) { t += dt; if (t >= DUR) t = 0; render(t); } requestAnimationFrame(loop); }
+  resize(); render(reduce ? 2.5 : 0);
+  if (!RECORD) requestAnimationFrame(loop);
+  window.__render = T => render(T); window.__DUR = DUR; window.__setVariant = setVariant;
+})();
+</script>
