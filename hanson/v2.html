@@ -1,0 +1,432 @@
+<title>Hanson: Why Not PM</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 9:16 reel frame; 3D poll bars, portrait cards, Australia map and SA chamber behind; captions in the lower third. */
+:root {
+  --field: #100c0a; --ink: #f4efe8; --ink-dim: #b8ab9f;
+  --orange: #f36c21; --orange-hi: #ff9a4d; --labor: #e2453f;
+  --display: "Bricolage Grotesque", "Inter Display", "Arial Narrow", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "DejaVu Sans Mono", monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; margin: 0; }
+body { background: var(--field); color: var(--ink); font-family: var(--display);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 12px; box-sizing: border-box; overflow: hidden; }
+.stage { position: relative; height: calc(100% - 64px); aspect-ratio: 9 / 16; max-width: 100%; border-radius: 14px; overflow: hidden;
+  background: radial-gradient(120% 80% at 50% 28%, #2a170c 0%, var(--field) 70%); container-type: size;
+  box-shadow: 0 30px 80px rgba(0,0,0,.5), 0 0 0 1px rgba(243,108,33,.15); }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.vignette { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(16,12,10,.85) 0%, rgba(16,12,10,.4) 13%, rgba(16,12,10,0) 21%, rgba(16,12,10,0) 46%, rgba(16,12,10,.8) 60%, rgba(16,12,10,.95) 71%, rgba(16,12,10,.97) 100%); }
+.top { position: absolute; left: 11cqw; right: 11cqw; top: 12.5cqh; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-dim); }
+.top .handle { text-transform: none; letter-spacing: .06em; color: var(--ink); }
+.top .mark { display: flex; gap: 1.6cqw; align-items: center; }
+.top .mark i { width: 2.2cqw; height: 2.2cqw; border-radius: 50%; background: var(--orange); display: inline-block; }
+.ai { position: absolute; left: 11cqw; top: 15.4cqh; font-family: var(--mono); font-size: 2.1cqw; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-dim); border: 1px solid rgba(244,239,232,.25); border-radius: 99px; padding: .2cqh 1.8cqw; }
+.progress { position: absolute; left: 11cqw; right: 11cqw; top: 10.5cqh; display: flex; gap: 1cqw; }
+.progress span { flex: 1; height: .45cqw; min-height: 2px; border-radius: 2px; background: rgba(244,239,232,.18); overflow: hidden; }
+.progress span b { display: block; height: 100%; width: 0; background: var(--orange); }
+.card { position: absolute; left: 11cqw; right: 12cqw; bottom: 18cqh; display: flex; flex-direction: column; gap: 1.8cqh; opacity: 0; will-change: transform, opacity; transform-origin: 0 100%; }
+.eyebrow { font-family: var(--mono); font-size: 2.8cqw; letter-spacing: .16em; text-transform: uppercase; color: var(--orange); margin: 0; }
+h1, h2 { margin: 0; font-weight: 800; letter-spacing: -.02em; line-height: .95; text-wrap: balance; font-variation-settings: "opsz" 96; }
+h1 { font-size: 12.4cqw; line-height: .92; }
+h2 { font-size: 10.6cqw; }
+h1 em, h2 em { font-style: normal; color: var(--orange); }
+h2 em.lab { color: var(--labor); }
+.sub { font-size: 4.4cqw; line-height: 1.3; color: var(--ink); margin: 0; font-weight: 500; max-width: 32ch; }
+.sub b { color: var(--orange-hi); font-weight: 800; }
+.sub b.lab { color: #ff7a72; }
+.src { font-family: var(--mono); font-size: 2.3cqw; color: var(--ink-dim); letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+.fine { font-family: var(--mono); font-size: 2.2cqw; color: var(--ink-dim); letter-spacing: .05em; line-height: 1.5; }
+.cta { margin: 0; align-self: flex-start; font-size: 6.4cqw; font-weight: 800; color: var(--field); background: var(--orange); border-radius: 2cqw; padding: .4cqh 3.6cqw .8cqh; }
+.big { position: absolute; right: 11cqw; top: 19cqh; text-align: right; opacity: 0; font-variant-numeric: tabular-nums;
+  text-shadow: 0 2px 18px rgba(16,12,10,.9), 0 0 4px rgba(16,12,10,.8); }
+.big .v { font-size: 17cqw; font-weight: 800; line-height: .9; letter-spacing: -.04em; color: var(--orange); }
+.big .l { font-family: var(--mono); font-size: 2.6cqw; letter-spacing: .12em; text-transform: uppercase; color: var(--ink); max-width: 44cqw; margin-left: auto; margin-top: 1cqh; }
+.flash { position: absolute; inset: 0; background: #f36c21; opacity: 0; pointer-events: none; mix-blend-mode: screen; }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.controls button { font: 500 13px/1 var(--mono); color: var(--ink); background: rgba(244,239,232,.07); border: 1px solid rgba(244,239,232,.18);
+  border-radius: 99px; padding: 9px 14px; cursor: pointer; letter-spacing: .04em; }
+.controls button:hover { background: rgba(244,239,232,.14); }
+.controls button:focus-visible { outline: 2px solid var(--orange); outline-offset: 2px; }
+body.record { padding: 0; gap: 0; }
+body.record .stage { height: 100%; border-radius: 0; box-shadow: none; }
+body.record .controls { display: none; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="vignette"></div>
+  <div class="flash" id="flash"></div>
+  <div class="progress" id="progress"></div>
+  <div class="top"><span class="mark"><i></i>Canberra explainer</span><span class="handle">@osherfeldman</span></div>
+  <div class="ai">AI caricature</div>
+  <div class="big" id="big"><div class="v" id="bigv"></div><div class="l" id="bigl"></div></div>
+
+  <section class="card" data-scene="0">
+    <p class="eyebrow">One Nation · Newspoll</p>
+    <h1>Polling like a <em>major party</em></h1>
+  </section>
+  <section class="card" data-scene="1">
+    <h2>So why is Hanson nowhere near <em>the Lodge?</em></h2>
+  </section>
+  <section class="card" data-scene="2">
+    <p class="eyebrow">Problem one</p>
+    <h2>Their vote is in <em>the bush</em></h2>
+    <p class="sub">They'd sweep country seats. But <b>the cities</b> decide who governs.</p>
+  </section>
+  <section class="card" data-scene="3">
+    <p class="eyebrow">Problem two</p>
+    <h2><em>Preferences</em></h2>
+    <p class="sub">Once they're counted: <b class="lab">Labor 53.5</b> · <b>One Nation 46.5</b></p>
+    <p class="src">Roy Morgan · late Sept 2026 · two-party preferred</p>
+  </section>
+  <section class="card" data-scene="4">
+    <p class="eyebrow">The proof · SA election 2026</p>
+    <h2><em>23%</em> of the vote. Just <em>4</em> seats.</h2>
+    <p class="sub">That's 4 of the 47 seats in SA's lower house.</p>
+  </section>
+  <section class="card" data-scene="5">
+    <h2>Can Hanson crack <em>the cities</em> by 2028?</h2>
+    <p class="cta">Tell us below ↓</p>
+    <div class="fine">AI caricature · Sources: Newspoll Oct 2026; Roy Morgan Sept 2026; Antony Green; SA election 2026</div>
+  </section>
+</div>
+
+<div class="controls">
+  <button id="play" type="button">Play with sound</button>
+  <button id="restart" type="button">Restart</button>
+</div>
+<audio id="vo" src="voiceover/vo2.mp3" preload="auto"></audio>
+
+<script src="amp2.js"></script>
+<script src="portraits.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const RECORD = /[?&]record\b/.test(location.search) || window.__RECORD;
+  if (RECORD) document.body.classList.add('record');
+  const AMP = window.__AMP || [];
+
+  // beats timed to Charlie's take: "So why" 3.0 · "Problem one" 6.7 · "Problem two" 14.1 · "The proof" 21.1 · "So can Hanson" 28.35
+  const SCENES = [{ s: 0, e: 3.0 }, { s: 3.0, e: 6.65 }, { s: 6.65, e: 14.0 }, { s: 14.0, e: 21.0 }, { s: 21.0, e: 28.25 }, { s: 28.25, e: 32.44 }];
+  const DUR = 32.44;
+  const B = SCENES.map(x => x.s);
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const backOut = t => { const c = 1.9; return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2); };
+  const drop = t => { if (t <= 0) return 0; if (t < .55) { const u = t / .55; return u * u; } const u = (t - .55) / .45; return 1 - Math.abs(Math.sin(u * Math.PI * 2.2)) * .06 * (1 - u); };
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const sceneAt = t => { for (let i = SCENES.length - 1; i >= 0; i--) if (t >= SCENES[i].s) return i; return 0; };
+  const ampAt = T => { const f = T * 30, k = Math.floor(f), u = f - k; return lerp(AMP[k] || 0, AMP[k + 1] || 0, u); };
+  const rnd = k => { const x = Math.sin(k * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+  const ORANGE = 0xf36c21, LABOR = 0xe2453f;
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true, preserveDrawingBuffer: RECORD });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x100c0a, 30, 75);
+  const camera = new THREE.PerspectiveCamera(42, 9/16, .1, 120);
+  scene.add(new THREE.HemisphereLight(0xffe8d6, 0x1a0f08, .55));
+  const key = new THREE.DirectionalLight(0xfff1e0, 1.1); key.position.set(-5, 16, 10); key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048); Object.assign(key.shadow.camera, { left: -26, right: 14, top: 16, bottom: -16, near: 1, far: 60 });
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xff8a3d, .9); rim.position.set(7, 6, -9); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xffd9c0, .35); fill.position.set(6, 3, 8); scene.add(fill);
+  const pop = new THREE.PointLight(ORANGE, 0, 14, 2); scene.add(pop);
+
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(45, 72), new THREE.MeshStandardMaterial({ color: 0x1c130e, roughness: .95 }));
+  floor.rotation.x = -Math.PI/2; floor.receiveShadow = true; scene.add(floor);
+  const grid = new THREE.GridHelper(60, 60, 0x5a2d14, 0x2e1c12); grid.position.y = .005; grid.material.transparent = true; grid.material.opacity = .4; scene.add(grid);
+
+  function label(text, { size = 64, color = '#f4efe8', weight = 800, font = 'Bricolage Grotesque', w = 512, h = 160, pill = false } = {}) {
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const tex = new THREE.CanvasTexture(c);
+    let cur = text;
+    const draw = () => { const g = c.getContext('2d'); g.clearRect(0, 0, w, h);
+      if (pill) { g.fillStyle = 'rgba(16,12,10,.88)'; g.beginPath(); g.roundRect ? g.roundRect(30, 28, w - 60, h - 56, 46) : g.rect(30, 28, w - 60, h - 56); g.fill(); g.strokeStyle = pill; g.lineWidth = 6; g.stroke(); }
+      g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle';
+      g.font = `${weight} ${size}px "${font}", "Inter Display", "Inter", sans-serif`; g.fillText(cur, w/2, h/2 + 2); tex.needsUpdate = true; };
+    draw(); (document.fonts && document.fonts.ready || Promise.resolve()).then(draw);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+    sp.scale.set(w / 160, h / 160, 1);
+    sp.setText = t => { if (t !== cur) { cur = t; draw(); } };
+    return sp;
+  }
+  const std = (color, o = {}) => new THREE.MeshStandardMaterial(Object.assign({ color, roughness: .6 }, o));
+  const shadowed = m => { m.castShadow = true; m.receiveShadow = true; return m; };
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  const _m = new THREE.Matrix4(), _q = new THREE.Quaternion(), _p = new THREE.Vector3(), _s = new THREE.Vector3();
+
+  // ---------------- Parliament House backdrop + flagmast
+  const parl = new THREE.Group();
+  const white = std(0xece6da, { roughness: .8 });
+  const wing = shadowed(new THREE.Mesh(new THREE.BoxGeometry(18, 1.3, 3), white)); wing.position.y = .65; parl.add(wing);
+  const front = shadowed(new THREE.Mesh(new THREE.BoxGeometry(5, 2, 1.2), white)); front.position.set(0, 1, 1.9); parl.add(front);
+  for (let k = 0; k < 9; k++) { const col = new THREE.Mesh(new THREE.BoxGeometry(.18, 1.6, .18), std(0xd8d0c0)); col.position.set(-2.2 + k * .55, .8, 2.6); parl.add(col); }
+  const grass = new THREE.Mesh(new THREE.BoxGeometry(18, .3, 2.4), std(0x31502c, { roughness: 1 })); grass.position.set(0, 1.45, -.2); parl.add(grass);
+  const steel = std(0xdfe3e8, { metalness: .9, roughness: .25 });
+  const TOP = V(0, 9.5, 0);
+  [[-1.4, -1.4], [1.4, -1.4], [1.4, 1.4], [-1.4, 1.4]].forEach(([x, z]) => {
+    const a = V(x, 1.4, z), d = TOP.clone().sub(a), len = d.length();
+    const leg = new THREE.Mesh(new THREE.CylinderGeometry(.06, .1, len, 8), steel);
+    leg.position.copy(a).add(d.clone().multiplyScalar(.5)); leg.quaternion.setFromUnitVectors(V(0, 1, 0), d.normalize()); parl.add(leg);
+  });
+  const mast = new THREE.Mesh(new THREE.CylinderGeometry(.04, .04, 2.2, 8), steel); mast.position.set(0, 10.5, 0); parl.add(mast);
+  const flag = new THREE.Mesh(new THREE.PlaneGeometry(1.5, .8, 10, 1), std(0x1b2a6b, { side: THREE.DoubleSide, roughness: .9 })); flag.position.set(.78, 11.1, 0); parl.add(flag);
+  const flagPos = flag.geometry.attributes.position, flagX = Array.from({ length: flagPos.count }, (_, k) => flagPos.getX(k));
+  parl.position.set(0, 0, -12); scene.add(parl);
+
+  // ---------------- portrait card (AI caricature)
+  const PW = 2.0, PH = 2.2;
+  const P = new THREE.Group();
+  const frame = shadowed(new THREE.Mesh(new THREE.BoxGeometry(PW + .14, PH + .14, .1), std(ORANGE, { roughness: .45, emissive: ORANGE, emissiveIntensity: .25 })));
+  frame.position.set(0, PH / 2, -.06); P.add(frame);
+  const pTex = (window.__PORTRAITS || []).map(src => { const t = new THREE.Texture(); const im = new Image(); t.image = im;
+    t.ready = new Promise(r => { im.onload = () => { t.needsUpdate = true; r(); }; }); im.src = src; return t; });
+  window.__ready = Promise.all(pTex.map(t => t.ready));
+  const pMat = new THREE.MeshBasicMaterial({ map: pTex[0] || null, toneMapped: false });
+  const photo = new THREE.Mesh(new THREE.PlaneGeometry(PW, PH), pMat); photo.position.set(0, PH / 2, .001); P.add(photo);
+  scene.add(P);
+  const qMark = label('?', { size: 150, color: '#f36c21', w: 200, h: 200 }); qMark.scale.set(1.4, 1.4, 1); scene.add(qMark);
+
+  // ---------------- poll bars: primaries, then preferences flow (left of centre)
+  const BK = .085, BZ = -.5;
+  const POLL = [
+    { name: 'ONE NATION', p: 28, f: 46.5, color: ORANGE, x: -6.3 },
+    { name: 'LABOR', p: 29, f: 53.5, color: LABOR, x: -4.9 },
+    { name: 'COALITION', p: 20, f: 0, color: 0x2f6fd1, x: -3.5 },
+    { name: 'OTHERS', p: 23, f: 0, color: 0x6f6660, x: -2.1 },
+  ];
+  POLL.forEach(b => {
+    b.mat = std(b.color, { roughness: .4, metalness: .1, emissive: b.color, emissiveIntensity: .15 });
+    b.mesh = shadowed(new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), b.mat)); b.mesh.position.set(b.x, 0, BZ); scene.add(b.mesh);
+    b.top = label(b.p + '%', { size: 70, color: b.color === ORANGE ? '#ff8a3d' : '#f4efe8' }); b.top.scale.multiplyScalar(.5); scene.add(b.top);
+    b.bot = label(b.name, { size: 38, weight: 500, font: 'IBM Plex Mono', color: '#b8ab9f' }); b.bot.scale.multiplyScalar(.45); b.bot.position.set(b.x, .2, BZ + .85); scene.add(b.bot);
+  });
+  // preference "votes" flowing from Coalition/Others into the top two
+  const FLOW = 90;
+  const flowMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(.16, .16, .16), std(0xffffff, { roughness: .5 }), FLOW);
+  const flowData = Array.from({ length: FLOW }, (_, k) => ({ from: 2 + (k % 2), to: rnd(k + 3) < .56 ? 1 : 0, t0: 16.4 + rnd(k + 11) * 1.9, jx: (rnd(k + 5) - .5) * .6, jz: (rnd(k + 6) - .5) * .6 }));
+  const flowC = new THREE.Color();
+  flowData.forEach((d, k) => flowMesh.setColorAt(k, flowC.setHex(POLL[d.from].color)));
+  scene.add(flowMesh);
+
+  // ---------------- Australia (stylised extruded outline), regional seats and city towers
+  const MAP = V(-17, 0, 1.5), MS = .34;
+  const COAST = [[113.7,-22.5],[114.2,-26.3],[115,-29.5],[115.6,-33.3],[115.1,-34.3],[117.9,-35.1],[120,-33.9],[123.5,-33.9],[126,-32.3],[129,-31.7],[131.2,-31.5],[133.5,-32.2],[135.2,-34.6],[136.3,-33.4],[137.8,-32.7],[137.6,-34.2],[138.5,-35.6],[139.6,-36.9],[140.9,-38.0],[143.5,-38.8],[144.9,-37.9],[146.4,-39.1],[147.9,-37.9],[149.9,-37.5],[150.2,-35.8],[151.2,-33.9],[152.5,-32.4],[153.6,-28.6],[153.1,-26.0],[152.8,-25.3],[151,-23.5],[149.4,-21.5],[148.4,-20.1],[146.3,-18.9],[145.3,-16.2],[145.4,-14.8],[143.6,-14.0],[142.5,-10.7],[141.6,-12.9],[141.6,-15.2],[140.8,-17.4],[139.3,-17.4],[137.3,-15.9],[135.5,-14.9],[136.9,-12.3],[135.9,-11.9],[132.6,-11.5],[130.8,-12.4],[129.5,-14.9],[128.1,-15.0],[126.2,-14.1],[124.9,-15.4],[123.6,-16.9],[122.2,-18.0],[121.0,-19.6],[118.8,-20.3],[116.7,-20.6],[114.6,-21.8]];
+  const TAS = [[144.7,-40.7],[148.3,-40.9],[148.0,-43.2],[146.6,-43.6],[145.3,-42.2]];
+  const toXY = ([lon, lat]) => new THREE.Vector2((lon - 134) * MS, (lat + 27) * MS);
+  const toW = (lon, lat, y = 0) => V(MAP.x + (lon - 134) * MS, y, MAP.z - (lat + 27) * MS);
+  const landMat = std(0x3a2a20, { roughness: .9 });
+  [COAST, TAS].forEach(pts => {
+    const shape = new THREE.Shape(pts.map(toXY));
+    const g = new THREE.ExtrudeGeometry(shape, { depth: .25, bevelEnabled: true, bevelThickness: .05, bevelSize: .05, bevelSegments: 2 });
+    const land = shadowed(new THREE.Mesh(g, landMat)); land.rotation.x = -Math.PI / 2; land.position.copy(MAP); scene.add(land);
+  });
+  const inPoly = (x, y, poly) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j];
+    if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+  const CITIES = [['SYDNEY', 151.0, -33.85, 22], ['MELBOURNE', 145.0, -37.8, 22], ['BRISBANE', 152.95, -27.5, 12], ['PERTH', 115.95, -31.95, 11], ['ADELAIDE', 138.6, -34.9, 7]];
+  const nearCity = (lon, lat) => CITIES.some(([, x, y]) => Math.hypot(lon - x, lat - y) < 2.2);
+  // regional seats: weighted to the east and Queensland, where One Nation's vote is strongest
+  const bush = [];
+  for (let k = 0; bush.length < 46 && k < 4000; k++) {
+    const lon = 138 + rnd(k * 3 + 1) * 15.5, lat = -39 + rnd(k * 3 + 2) * 23;
+    if (!inPoly(lon, lat, COAST) || nearCity(lon, lat)) continue;
+    if (lon < 141 && rnd(k + 77) < .7) continue;
+    if (bush.some(b => Math.hypot(b.lon - lon, b.lat - lat) < 1.25)) continue;
+    bush.push({ lon, lat, t: rnd(k + 9) });
+  }
+  [[117, -33], [120.5, -30], [116, -28], [121, -20.5], [133, -24], [131, -13.5], [136, -32.5], [140.5, -36]].forEach(([lon, lat], k) => bush.push({ lon, lat, t: rnd(k + 300) }));
+  const bushMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(.2, .22, .22, 18), std(0xffffff, { roughness: .45 }), bush.length);
+  bushMesh.castShadow = true; scene.add(bushMesh);
+  const cityTowers = [];
+  CITIES.forEach(([name, lon, lat, n], ci) => {
+    const c = toW(lon, lat);
+    for (let k = 0; k < n; k++) { const a = k * 2.4, r = .14 * Math.sqrt(k + 1); cityTowers.push({ x: c.x + Math.cos(a) * r, z: c.z + Math.sin(a) * r, ci, k, h: .5 + rnd(k + ci * 40) * .9 }); }
+    const lb = label(name, { size: 40, weight: 500, font: 'IBM Plex Mono', color: '#f4efe8', w: 420 }); lb.scale.multiplyScalar(.6); lb.position.copy(c).add(V(0, 2.0, .9)); scene.add(lb); CITIES[ci].lbl = lb;
+  });
+  const towerMat = std(0xb9c3cc, { roughness: .35, metalness: .3, emissive: 0x7f95aa, emissiveIntensity: .0 });
+  const towerMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(.17, 1, .17), towerMat, cityTowers.length); towerMesh.castShadow = true; scene.add(towerMesh);
+  const mapTitle = label('REGIONAL vs CITY SEATS', { size: 44, weight: 500, font: 'IBM Plex Mono', color: '#b8ab9f', w: 760 }); mapTitle.scale.multiplyScalar(.7); mapTitle.position.copy(toW(134, -9.5, .3)); scene.add(mapTitle);
+
+  // ---------------- SA House of Assembly: 47 seats + a 22.9% vote ring
+  const SAC = V(2.6, 0, -5.4);
+  const SAROWS = [[1.5, 11], [2.15, 16], [2.8, 20]];
+  const saSeats = [];
+  SAROWS.forEach(([r, n]) => { for (let k = 0; k < n; k++) saSeats.push({ a: Math.PI - (k + .5) / n * Math.PI, r }); });
+  saSeats.sort((p, q) => q.a - p.a);
+  const saMesh = new THREE.InstancedMesh(new THREE.CylinderGeometry(.19, .21, .24, 18), std(0xffffff, { roughness: .5 }), saSeats.length);
+  saMesh.castShadow = true;
+  saSeats.forEach((st, k) => { _p.set(SAC.x + Math.cos(st.a) * st.r, .12 + (st.r - 1.5) * .15, SAC.z - Math.sin(st.a) * st.r); _s.set(1, 1, 1); _q.identity(); _m.compose(_p, _q, _s); saMesh.setMatrixAt(k, _m); });
+  scene.add(saMesh);
+  const saTier = new THREE.Mesh(new THREE.RingGeometry(1.15, 3.15, 64, 1, 0, Math.PI), std(0x2a1d15, { side: THREE.DoubleSide, roughness: .9 }));
+  saTier.rotation.x = -Math.PI / 2; saTier.position.set(SAC.x, .02, SAC.z); saTier.receiveShadow = true; scene.add(saTier);
+  const saLbl = label('SA LOWER HOUSE · 47 SEATS', { size: 40, weight: 500, font: 'IBM Plex Mono', color: '#b8ab9f', w: 760 }); saLbl.scale.multiplyScalar(.55); saLbl.position.set(SAC.x, .3, SAC.z + .9); scene.add(saLbl);
+  const RING = V(-.9, 2.0, -4.4);
+  const ringBg = new THREE.Mesh(new THREE.RingGeometry(1.0, 1.55, 96), std(0x3a302a, { side: THREE.DoubleSide, roughness: .8 })); ringBg.position.copy(RING); scene.add(ringBg);
+  let ringArc = null;
+  const ringMat = std(ORANGE, { side: THREE.DoubleSide, emissive: ORANGE, emissiveIntensity: .5 });
+  const ringLbl = label('0%', { size: 92, color: '#ff8a3d', w: 360 }); ringLbl.scale.multiplyScalar(.55); ringLbl.position.copy(RING).add(V(0, 0, .05)); scene.add(ringLbl);
+  const ringCap = label('OF THE VOTE', { size: 38, weight: 500, font: 'IBM Plex Mono', color: '#b8ab9f', w: 400 }); ringCap.scale.multiplyScalar(.5); ringCap.position.copy(RING).add(V(0, -1.95, 0)); scene.add(ringCap);
+  function setRing(frac) {
+    if (ringArc) { scene.remove(ringArc); ringArc.geometry.dispose(); ringArc = null; }
+    if (frac <= .002) return;
+    ringArc = new THREE.Mesh(new THREE.RingGeometry(1.0, 1.55, 96, 1, Math.PI / 2 - frac * Math.PI * 2, frac * Math.PI * 2), ringMat);
+    ringArc.position.copy(RING).add(V(0, 0, .02)); scene.add(ringArc);
+  }
+
+  // embers
+  const dg = new THREE.BufferGeometry(), dp = new Float32Array(320 * 3);
+  for (let i = 0; i < 320; i++) { dp[i*3] = (rnd(i) - .5) * 44 - 6; dp[i*3+1] = rnd(i + 50) * 10; dp[i*3+2] = (rnd(i + 90) - .5) * 30; }
+  dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: 0xff8a3d, size: .05, transparent: true, opacity: .5 })); scene.add(dust);
+
+  // ---------------- cameras per beat [pos start, look start, pos end, look end]
+  const CAMS = [
+    [V(-5.4, 1.2, 4.2), V(-6.2, 2.0, -.5), V(-3.2, 3.6, 11.4), V(-4.3, 2.2, -.5)],     // hook: rush up the One Nation bar, pull back on all four
+    [V(.3, 3.6, 8.6), V(0, 2.95, 1.2), V(.9, 4.0, 11.6), V(0, 2.8, -1)],               // card slams down; Parliament behind
+    [V(-15.6, 39, 14.5), V(-15.6, 0, 3.1), V(-12.4, 21, 11.5), V(-12.6, 0, 2.9)],               // Australia, then push to the east coast cities
+    [V(-3.6, 3.6, 13.6), V(-4.2, 2.6, -.5), V(-4.8, 4.2, 13.4), V(-4.4, 2.9, -.5)],    // preferences
+    [V(.6, 7.4, 12.4), V(.8, 1.3, -5.0), V(1.0, 8.0, 12.8), V(.9, 1.1, -5.1)],            // SA: ring + chamber
+    [V(0, 3.6, 13.6), V(0, 2.1, 0), V(0, 4.6, 16.4), V(0, 2.0, -1.5)],                 // ending
+  ];
+  function camFor(i, p) { const c = CAMS[i], e = i === 0 ? easeOut(p) : i === 2 ? ease(clamp((p - .64) / .36)) : ease(p); return [c[0].clone().lerp(c[2], e), c[1].clone().lerp(c[3], e)]; }
+
+  const cards = [...document.querySelectorAll('.card')];
+  const progress = document.getElementById('progress');
+  SCENES.forEach(() => { const s = document.createElement('span'); s.appendChild(document.createElement('b')); progress.appendChild(s); });
+  const pbars = [...progress.querySelectorAll('b')];
+  const bigEl = document.getElementById('big'), bigV = document.getElementById('bigv'), bigL = document.getElementById('bigl'), flash = document.getElementById('flash');
+  const tmpC = new THREE.Color(), C = { grey: new THREE.Color(0x4a3f38), orange: new THREE.Color(ORANGE), hot: new THREE.Color(0xffc08a) };
+  let lastRing = -1;
+
+  function render(T) {
+    T = clamp(T, 0, DUR - 1e-3);
+    const i = sceneAt(T), S = SCENES[i], local = T - S.s, p = clamp(local / (S.e - S.s));
+    const blend = i > 0 ? ease(clamp(local / (i === 2 ? .9 : .55))) : 1;
+    let [cp, cl] = camFor(i, p);
+    if (blend < 1) { const [pp, pl] = camFor(i - 1, 1); cp = pp.lerp(cp, blend); cl = pl.lerp(cl, blend); }
+    // impacts: card landing (3.55s) and the SA "4 seats" (26.6s)
+    const hits = [3.55, 26.6];
+    let shake = 0; hits.forEach(h => { if (T > h) shake += Math.exp(-(T - h) * 8); });
+    cp.x += Math.sin(T * 90) * .08 * shake; cp.y += Math.cos(T * 77) * .08 * shake;
+    camera.position.copy(cp); camera.lookAt(cl);
+    const amp = ampAt(T);
+
+    // ---- poll bars: all four shoot up from frame 0; preferences from 16.4s
+    const flowP = clamp((T - 16.4) / 2.2);
+    POLL.forEach((b, k) => {
+      const g = easeOut(clamp((T + .22 - k * .16) / .55));
+      const v = lerp(b.p, b.f, ease(flowP));
+      const h = Math.max(.001, v * BK * g);
+      b.mesh.scale.set(1, h, 1); b.mesh.position.y = h / 2; b.mesh.visible = h > .002 && i !== 5;
+      b.top.position.set(b.x, h + .4, BZ); b.top.visible = i === 3; b.bot.visible = i === 3 || i < 2;
+      b.top.material.opacity = v < 1 ? 0 : clamp((g - .6) / .4);
+      b.top.setText((flowP > 0 && flowP < 1 ? Math.round(v) : (flowP >= 1 ? v : b.p)) + '%');
+      b.mat.emissiveIntensity = (k === 0 && i < 2) ? .4 + .2 * Math.sin(T * 8) : (k === 1 && flowP >= 1 && i === 3) ? .45 + .2 * Math.sin(T * 7) : .15;
+    });
+    for (let k = 0; k < FLOW; k++) {
+      const d = flowData[k], u = clamp((T - d.t0) / .7), a = POLL[d.from], b = POLL[d.to];
+      if (u <= 0 || u >= 1 || i !== 3) { _s.setScalar(.0001); } else _s.setScalar(1);
+      const y0 = Math.max(.3, a.p * BK * (1 - flowP)), y1 = lerp(b.p, b.f, ease(flowP)) * BK;
+      _p.set(lerp(a.x + d.jx, b.x + d.jx * .5, u), lerp(y0, y1, u) + Math.sin(u * Math.PI) * 1.6, BZ + d.jz);
+      _q.setFromEuler(new THREE.Euler(u * 6, u * 4, 0)); _m.compose(_p, _q, _s); flowMesh.setMatrixAt(k, _m);
+    }
+    flowMesh.instanceMatrix.needsUpdate = true;
+
+    // ---- portrait card: slams down on "So why" (3.0s), returns for the ending
+    let pv = false;
+    if (i === 1) { const d = clamp((T - 3.05) / .5); pv = true; P.position.set(0, (1 - drop(d)) * 7 + .95 + .1 * Math.sin(T * 1.6) * (d >= 1), 1.2); const want = pTex[0]; if (want && pMat.map !== want) { pMat.map = want; pMat.needsUpdate = true; } }
+    if (i === 5) { const s = backOut(clamp((T - B[5]) / .5)); pv = s > .001; P.position.set(0, .37 + .12 * Math.sin(T * 1.6), 2.6); P.scale.setScalar(Math.max(.001, s)); const want = pTex[2]; if (want && pMat.map !== want) { pMat.map = want; pMat.needsUpdate = true; } }
+    else P.scale.setScalar(1 + amp * .02);
+    P.visible = pv; P.rotation.set(0, Math.sin(T * .7) * .14, Math.sin(T * 1.1) * .02);
+    qMark.position.set(P.position.x + 1.45, 3.3 + Math.sin(T * 3) * .1, P.position.z); qMark.material.opacity = i === 5 ? clamp((T - B[5] - .5) / .3) : 0;
+    pop.position.set(0, 3, 3.5); pop.intensity = i === 1 ? 5 * Math.exp(-Math.max(0, T - 3.55) * 3) * (T > 3.55) + .5 : i === 5 ? 1.2 : 0;
+
+    // ---- map: regional seats light up 7.8–9.6s, bounce on "sweep" (10.1s); city towers rise on "cities" (11.8s)
+    bush.forEach((b, k) => {
+      const lit = clamp((T - 7.8 - b.t * 1.7) / .3);
+      const bounce = T > 10.1 + b.t * .9 ? Math.max(0, Math.sin(clamp((T - 10.1 - b.t * .9) / .35) * Math.PI)) * .5 : 0;
+      const w = toW(b.lon, b.lat, .42 + bounce);
+      _p.copy(w); _s.set(1, 1 + lit * .6, 1); _q.identity(); _m.compose(_p, _q, _s); bushMesh.setMatrixAt(k, _m);
+      bushMesh.setColorAt(k, tmpC.copy(C.grey).lerp(C.orange, lit).lerp(C.hot, bounce * .8));
+    });
+    bushMesh.instanceMatrix.needsUpdate = true; bushMesh.instanceColor.needsUpdate = true;
+    cityTowers.forEach((c, k) => {
+      const g = easeOut(clamp((T - 11.8 - c.k * .02 - c.ci * .1) / .6));
+      const h = .15 + c.h * 1.15 * g;
+      _p.set(c.x, .3 + h / 2, c.z); _s.set(1, h, 1); _q.identity(); _m.compose(_p, _q, _s); towerMesh.setMatrixAt(k, _m);
+    });
+    towerMesh.instanceMatrix.needsUpdate = true;
+    towerMat.emissiveIntensity = T > 11.8 ? .35 : 0;
+    CITIES.forEach(c => { c.lbl.material.opacity = clamp((T - 12.0) / .4); });
+    mapTitle.material.opacity = i === 2 ? clamp((local - .6) / .4) : 0;
+
+    // ---- SA: ring fills to 22.9% (21.9–23.6s), 4 seats light on "four seats" (26.6s)
+    const rf = .229 * easeOut(clamp((T - 21.9) / 1.7));
+    const rk = Math.round(rf * 1000); if (rk !== lastRing) { setRing(rf); lastRing = rk; }
+    ringLbl.setText(T < 21.9 ? '0%' : (rf >= .228 ? '23%' : Math.round(rf * 100) + '%'));
+    const saOn = i === 4;
+    [saMesh, saTier, saLbl, ringBg, ringLbl, ringCap].forEach(o => o.visible = saOn); if (ringArc) ringArc.visible = saOn;
+    const seatOn = T > 26.6;
+    for (let k = 0; k < saSeats.length; k++) saMesh.setColorAt(k, k < 4 && seatOn ? tmpC.copy(C.orange).lerp(C.hot, .5 + .5 * Math.sin(T * 7)) : C.grey);
+    saMesh.instanceColor.needsUpdate = true;
+
+    for (let k = 0; k < flagPos.count; k++) { const x = flagX[k]; flagPos.setZ(k, Math.sin(x * 3 - T * 5) * .08 * (x + .75)); }
+    flagPos.needsUpdate = true;
+    dust.rotation.y = T * .03;
+    renderer.render(scene, camera);
+
+    // ---- DOM
+    cards.forEach((c, k) => {
+      let o = 0, y = 0, sc = 1;
+      if (k === i) {
+        const inP = k === 0 ? 1 : easeOut(clamp((local - .08) / .35));
+        const outP = k === SCENES.length - 1 ? 1 : clamp((S.e - T - .02) / .25);
+        o = Math.min(inP, outP); y = (1 - inP) * 4;
+        if (k === 0) sc = 1 + .25 * Math.exp(-T * 9);
+      }
+      c.style.opacity = o.toFixed(3); c.style.transform = `translateY(${y.toFixed(2)}cqh) scale(${sc.toFixed(3)})`; c.style.visibility = o > .001 ? 'visible' : 'hidden';
+    });
+    pbars.forEach((b, k) => { b.style.width = (k < i ? 100 : k === i ? p * 100 : 0) + '%'; });
+    let bo = 0;
+    if (i === 0) { bo = 1; bigV.textContent = Math.round(28 * easeOut(clamp((T + .25) / .8))) + '%'; bigL.textContent = 'One Nation primary vote'; }
+    bigEl.style.opacity = (bo * clamp((S.e - T) / .25)).toFixed(3);
+    flash.style.opacity = (.12 * Math.exp(-T * 8) + (T > 3.55 ? .22 * Math.exp(-(T - 3.55) * 7) : 0)).toFixed(3);
+  }
+
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.setViewOffset(w, h, 0, h * .12, w, h);
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(() => { resize(); render(t); }).observe(stage);
+
+  const audio = document.getElementById('vo');
+  let t = 0, playing = !RECORD, last = performance.now();
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const playBtn = document.getElementById('play');
+  playBtn.onclick = () => { if (audio.paused) { audio.currentTime = t; audio.play().catch(() => {}); playing = true; playBtn.textContent = 'Pause'; } else { audio.pause(); playing = false; playBtn.textContent = 'Play with sound'; } };
+  document.getElementById('restart').onclick = () => { t = 0; audio.currentTime = 0; };
+  if (reduce && !RECORD) playing = false;
+  function loop(now) {
+    const dt = Math.min(.1, (now - last) / 1000); last = now;
+    if (playing) { if (!audio.paused) t = audio.currentTime; else { t += dt; if (t >= DUR) t = 0; } render(t); }
+    requestAnimationFrame(loop);
+  }
+  resize(); render(reduce ? 1.5 : 0);
+  if (!RECORD) requestAnimationFrame(loop);
+  window.__render = T => render(T); window.__DUR = DUR;
+})();
+</script>
