@@ -155,12 +155,12 @@ body.record .controls { display: none; }
   };
 
   // beats timed to the narration take (each starts as Charlie starts the line)
-  // nominal beats; retimed to the narration once the take arrives
+  // beats timed to the narration take (each starts as Charlie starts the line)
   const SCENES = [
-    { s: 0, e: 3.6 }, { s: 3.6, e: 8 }, { s: 8, e: 12.2 }, { s: 12.2, e: 16.6 },
-    { s: 16.6, e: 20.6 }, { s: 20.6, e: 24.4 }, { s: 24.4, e: 28.4 }
+    { s: 0, e: 5.15 }, { s: 5.15, e: 10.3 }, { s: 10.3, e: 12.9 }, { s: 12.9, e: 15.5 },
+    { s: 15.5, e: 18.25 }, { s: 18.25, e: 21.7 }, { s: 21.7, e: 26.2 }
   ];
-  const DUR = 28.4;
+  const DUR = 26.2;
   const B = SCENES.map(x => x.s);
   const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
   const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
@@ -281,7 +281,7 @@ body.record .controls { display: none; }
   // landing times for the four 2026 hikes in the hook (drop lasts 0.3s; Feb starts before frame 0)
   const LAND = [.12, .3, .48, .66];
   const coinsAt = T => T < B[1] ? 6 : Math.round(lerp(6, COINS, easeOut(clamp((T - B[1] - .3) / 2.6))));
-  const infAt = T => T < B[4] ? 1.2 : lerp(1.2, 4.3, ease(clamp((T - B[4] - .5) / 1.8)));
+  const infAt = T => T < B[4] ? 1.2 : lerp(1.2, 4.3, ease(clamp((T - B[4] - .1) / 1.1)));
 
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), pos = new THREE.Vector3(), scl = new THREE.Vector3(1, 1, 1);
   const cards = [...document.querySelectorAll('.card')];
@@ -342,9 +342,9 @@ body.record .controls { display: none; }
     // inflation
     const ih = infAt(T) * IK;
     inf.scale.y = ih; inf.position.y = ih / 2;
-    infLbl.position.set(INF_X, ih + .45, INF_Z); infLbl.material.opacity = i >= 4 ? clamp((T - B[4] - 1.1) / .4) : 0;
+    infLbl.position.set(INF_X, ih + .45, INF_Z); infLbl.material.opacity = i >= 4 ? clamp((T - B[4] - .7) / .4) : 0;
     band.material.opacity = i === 4 ? .32 : .16; bandLbl.material.opacity = i === 4 ? 1 : .45;
-    redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = i === 4 ? 2.4 * clamp((T - B[4] - .9) / .6) : i === 0 ? 2 * shake : 0;
+    redLight.position.set(INF_X, ih + .4, INF_Z + .8); redLight.intensity = i === 4 ? 2.4 * clamp((T - B[4] - .5) / .6) : i === 0 ? 2 * shake : 0;
     // house: lights dim through the chalmers beat and the ending
     winMat.emissiveIntensity = i >= 3 ? lerp(1, .12, clamp((T - B[3] - .6) / 1.4)) : 1;
     house.position.y = i >= 3 ? -.32 * ease(clamp((T - B[3] - .4) / 1.6)) : 0;
