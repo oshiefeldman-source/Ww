@@ -1,0 +1,183 @@
+<title>You vs Him</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a 9:16 split screen. HIM (photo card) on top, YOU (3D house losing money) in the middle, the line underneath. */
+:root {
+  --night: #0c1324;      /* navy night */
+  --ink: #f4efe4;
+  --dim: #9aa6bd;
+  --coral: #ff5a4e;      /* your money */
+  --lagoon: #3fd0c6;     /* Caribbean */
+  --sun: #ffc75a;
+  --display: "Bricolage Grotesque", "Inter Display", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--night); color: var(--ink); font-family: var(--display); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px; box-sizing: border-box; overflow: hidden; }
+.stage { position: relative; height: calc(100% - 64px); aspect-ratio: 9 / 16; max-width: 100%; border-radius: 14px; overflow: hidden; container-type: size;
+  background: radial-gradient(90% 55% at 50% 20%, #17345a 0%, var(--night) 70%); perspective: 900px; }
+.stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.top { position: absolute; left: 11cqw; right: 11cqw; top: 11cqh; display: flex; justify-content: space-between; font: 500 2.6cqw var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); z-index: 3; }
+.top .h { text-transform: none; letter-spacing: .06em; color: var(--ink); }
+.card { position: absolute; left: 11cqw; width: 78cqw; top: 15cqh; aspect-ratio: 650 / 366; border-radius: 2cqw; overflow: hidden; z-index: 2;
+  box-shadow: 0 3cqh 7cqh rgba(0,0,0,.55), 0 0 0 .5cqw var(--lagoon); transform-origin: 50% 100%; will-change: transform, filter; }
+.card img { width: 100%; height: 100%; object-fit: cover; display: block; will-change: transform; }
+.card .file { position: absolute; right: 2cqw; bottom: 1.4cqw; font: 500 2cqw var(--mono); color: rgba(255,255,255,.8); letter-spacing: .1em; text-transform: uppercase; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+.chip { position: absolute; font: 800 4.4cqw var(--display); letter-spacing: .02em; padding: .4cqh 3cqw .7cqh; border-radius: 99px; z-index: 4; }
+.chip.him { left: 13cqw; top: 13.2cqh; background: var(--lagoon); color: var(--night); }
+.chip.you { left: 11cqw; top: 46cqh; background: var(--coral); color: var(--night); }
+.count { position: absolute; right: 11cqw; top: 45cqh; text-align: right; z-index: 4; font-variant-numeric: tabular-nums; }
+.count b { display: block; font-size: 15cqw; font-weight: 800; line-height: .9; letter-spacing: -.04em; color: var(--coral); text-shadow: 0 1cqh 4cqh rgba(255,90,78,.35); }
+.count span { font: 500 2.5cqw var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--dim); }
+.line { position: absolute; left: 11cqw; right: 15cqw; bottom: 24cqh; z-index: 4; opacity: 0; }
+.line h2 { text-shadow: 0 .6cqh 3cqh rgba(12,19,36,.9); margin: 0; font-size: 10.4cqw; font-weight: 800; line-height: .94; letter-spacing: -.03em; text-wrap: balance; }
+.line h2 em { font-style: normal; }
+.c { color: var(--coral); } .l { color: var(--lagoon); }
+.cta { display: inline-block; margin-top: 1.6cqh; font-size: 6cqw; font-weight: 800; color: var(--night); background: var(--ink); border-radius: 1.8cqw; padding: .3cqh 3.4cqw .8cqh; }
+.fine { margin-top: 1.4cqh; font: 400 2.2cqw var(--mono); color: var(--dim); letter-spacing: .05em; line-height: 1.5; }
+.follow { position: absolute; left: 0; right: 0; top: 41cqh; text-align: center; z-index: 5; opacity: 0; }
+.follow b { font-size: 6.4cqw; font-weight: 800; color: var(--night); background: var(--sun); border-radius: 2cqw; padding: .6cqh 4cqw 1cqh; box-shadow: 0 2cqh 5cqh rgba(0,0,0,.5); }
+.follow span { font-weight: 500; }
+.controls { display: flex; gap: 8px; }
+.controls button { font: 500 13px var(--mono); color: var(--ink); background: rgba(244,239,228,.08); border: 1px solid rgba(244,239,228,.2); border-radius: 99px; padding: 9px 14px; cursor: pointer; }
+.controls button:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
+body.record { padding: 0; gap: 0; } body.record .stage { height: 100%; border-radius: 0; } body.record .controls { display: none; }
+</style>
+
+<div class="stage" id="stage">
+  <canvas id="gl" aria-hidden="true"></canvas>
+  <div class="top"><span>Rate rise · 3 Nov</span><span class="h">@osherfeldman</span></div>
+  <div class="card" id="card"><img id="photo" src="photos/albo-plane.jpg" alt="Anthony Albanese giving two thumbs up at a plane door"><span class="file">File photo</span></div>
+  <div class="chip him" id="chipHim">HIM</div>
+  <div class="chip you" id="chipYou">YOU</div>
+  <div class="count" id="count"><b id="countV">+$0</b><span>a month · $600k loan</span></div>
+  <div class="follow" id="follow"><b><span>Follow</span> @osherfeldman</b></div>
+  <div class="line" id="l0"><h2>You: <em class="c">$456 a month</em> more.</h2></div>
+  <div class="line" id="l1"><h2>Him: <em class="l">in the Caribbean.</em></h2></div>
+  <div class="line" id="l2"><h2>Who's to blame?</h2><span class="cta">Comment LABOR or RBA ↓</span><div class="fine">Opinion · Canstar via news.com.au; RBA 3 Nov 2026 · File photo</div></div>
+</div>
+<div class="controls"><button id="play" type="button">Pause</button><button id="restart" type="button">Restart</button></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(() => {
+  const RECORD = /[?&]record\b/.test(location.search) || window.__RECORD;
+  if (RECORD) document.body.classList.add('record');
+  // beats: A = you (money out), B = him (Caribbean), C = call to action. Retimed to the narration.
+  const BEATS = [0, 3.8, 7.2]; const DUR = 12.5;
+  const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+  const ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const easeOut = t => 1 - Math.pow(1 - t, 3);
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('gl'), antialias: true, alpha: true, preserveDrawingBuffer: RECORD });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); renderer.shadowMap.enabled = true;
+  const scene = new THREE.Scene(); scene.fog = new THREE.Fog(0x0c1324, 10, 26);
+  const camera = new THREE.PerspectiveCamera(36, 9/16, .1, 60);
+  scene.add(new THREE.HemisphereLight(0xbcd6ff, 0x0c1324, .55));
+  const key = new THREE.DirectionalLight(0xffe2c0, 1.1); key.position.set(-4, 8, 6); key.castShadow = true; key.shadow.mapSize.set(1024, 1024); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x3fd0c6, .7); rim.position.set(5, 3, -6); scene.add(rim);
+  const warm = new THREE.PointLight(0xff5a4e, 0, 6, 2); scene.add(warm);
+
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(14, 64), new THREE.MeshStandardMaterial({ color: 0x14203a, roughness: .95 }));
+  ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+  const grid = new THREE.GridHelper(20, 20, 0x2a3d63, 0x1a2846); grid.position.y = .005; scene.add(grid);
+  // the hole the house sinks into
+  const hole = new THREE.Mesh(new THREE.CircleGeometry(1.25, 48), new THREE.MeshBasicMaterial({ color: 0x05070d }));
+  hole.rotation.x = -Math.PI/2; hole.position.y = .01; scene.add(hole);
+
+  const house = new THREE.Group();
+  const walls = new THREE.Mesh(new THREE.BoxGeometry(1.3, .95, 1.05), new THREE.MeshStandardMaterial({ color: 0xece4d2, roughness: .8 }));
+  walls.position.y = .475; walls.castShadow = true;
+  const roof = new THREE.Mesh(new THREE.ConeGeometry(1.08, .66, 4), new THREE.MeshStandardMaterial({ color: 0xc8443a, roughness: .7 }));
+  roof.position.y = 1.28; roof.rotation.y = Math.PI / 4; roof.castShadow = true;
+  const winMat = new THREE.MeshStandardMaterial({ color: 0xffd27a, emissive: 0xffb84a, emissiveIntensity: 1 });
+  [-.3, .3].forEach(x => { const w = new THREE.Mesh(new THREE.PlaneGeometry(.26, .26), winMat); w.position.set(x, .55, .53); house.add(w); });
+  const door = new THREE.Mesh(new THREE.PlaneGeometry(.24, .42), new THREE.MeshStandardMaterial({ color: 0x2a1d14 })); door.position.set(0, .21, .53);
+  house.add(walls, roof, door); house.rotation.y = -.45; scene.add(house); house.scale.setScalar(.78);
+
+  // coins: lifted out of the house and flung off-screen to the upper right (towards HIM)
+  const N = 26, coinGeo = new THREE.CylinderGeometry(.16, .16, .035, 28);
+  const coinMat = new THREE.MeshStandardMaterial({ color: 0xffc75a, metalness: .85, roughness: .28, emissive: 0x3a2a00, emissiveIntensity: .4 });
+  const coins = new THREE.InstancedMesh(coinGeo, coinMat, N); scene.add(coins);
+  const seed = k => [Math.sin(k * 12.9898) * .5 + .5, Math.sin(k * 78.233) * .5 + .5, Math.sin(k * 39.425) * .5 + .5];
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e3 = new THREE.Euler(), pos = new THREE.Vector3(), scl = new THREE.Vector3();
+
+  const card = document.getElementById('card'), img = document.getElementById('photo');
+  const chipHim = document.getElementById('chipHim'), chipYou = document.getElementById('chipYou');
+  const countEl = document.getElementById('count'), countV = document.getElementById('countV');
+  const lines = [0, 1, 2].map(k => document.getElementById('l' + k));
+  const follow = document.getElementById('follow');
+
+  function render(T) {
+    T = clamp(T, 0, DUR - 1e-3);
+    const beat = T >= BEATS[2] ? 2 : T >= BEATS[1] ? 1 : 0;
+    // camera: rushes in on frame 1, then a slow orbit
+    const push = 1 - easeOut(clamp(T / 1.1));
+    const ang = .5 + T * .035;
+    camera.position.set(Math.sin(ang) * (10.5 + push * 4), 4.2 + push * 2, Math.cos(ang) * (10.5 + push * 4));
+    camera.lookAt(0, 1.6, 0);
+    // house sinks through beat A and keeps going
+    const sink = ease(clamp((T - .3) / 6)) * .78 + (beat === 2 ? ease(clamp((T - BEATS[2]) / 1.2)) * 1.4 : 0);
+    house.position.y = -sink; house.rotation.z = Math.sin(T * 2.2) * .02 * clamp(T / 1);
+    winMat.emissiveIntensity = lerp(1, .15, clamp((T - 1) / 5));
+    warm.position.set(0, .4, .9); warm.intensity = 1.6 * clamp(T / .6) * (beat === 0 ? 1 : .5);
+    // coins: a steady stream out of the roof, accelerating away
+    for (let k = 0; k < N; k++) {
+      const [a, b, c] = seed(k);
+      const life = ((T * .9 + k / N) % 1);
+      const on = T > k / N * .4 ? 1 : 0;
+      pos.set(lerp(.1, 3.2 + a * 1.2, life * life), 1.3 - sink + life * (2.2 + b * 1.2), lerp(0, -1.2 - c, life));
+      e3.set(T * 4 + k, T * 3 + k * 2, 0); q.setFromEuler(e3);
+      scl.setScalar(on * (1 - life * .5));
+      m4.compose(pos, q, scl); coins.setMatrixAt(k, m4);
+    }
+    coins.instanceMatrix.needsUpdate = true;
+    renderer.render(scene, camera);
+
+    // HIM card: tilts in 3D, takes focus in beat B
+    const focus = beat === 1 ? easeOut(clamp((T - BEATS[1]) / .5)) : beat === 2 ? 1 - easeOut(clamp((T - BEATS[2]) / .5)) : 0;
+    const enter = easeOut(clamp(T / .45));
+    const ry = lerp(-14, -4, ease(clamp(T / DUR))) + (1 - enter) * -25;
+    const sc = (.94 + .1 * focus) * lerp(.92, 1, enter);
+    card.style.transform = `rotateX(${(4 - 4 * focus).toFixed(2)}deg) rotateY(${(ry * (1 - focus)).toFixed(2)}deg) scale(${sc.toFixed(4)}) translateY(${(-1.5 * focus).toFixed(2)}cqh)`;
+    card.style.filter = `brightness(${(.78 + .22 * Math.max(focus, beat === 2 ? 1 : 0, beat === 0 ? .2 : 0)).toFixed(3)})`;
+    img.style.transform = `scale(${lerp(1.04, 1.16, T / DUR).toFixed(4)})`;
+    chipHim.style.transform = `scale(${(1 + .12 * focus).toFixed(3)})`;
+    chipYou.style.opacity = (beat === 1 ? .45 : beat === 2 ? 1 - clamp((T - BEATS[2]) / .35) : 1).toFixed(2);
+    // YOU counter
+    countV.textContent = '+$' + Math.round(456 * easeOut(clamp((T - .2) / 2.6)));
+    countEl.style.opacity = (beat === 1 ? .45 : beat === 2 ? 1 - clamp((T - BEATS[2]) / .35) : 1).toFixed(2);
+    // the line for each beat
+    lines.forEach((el, k) => {
+      const s = BEATS[k], e = k < 2 ? BEATS[k + 1] : DUR + 1;
+      const inP = k === 0 ? 1 : easeOut(clamp((T - s - .05) / .35));
+      const outP = clamp((e - T - .02) / .25);
+      const o = T >= s && T < e ? Math.min(inP, outP) : 0;
+      el.style.opacity = o.toFixed(3); el.style.transform = `translateY(${((1 - inP) * 3).toFixed(2)}cqh)`;
+    });
+    follow.style.opacity = clamp((T - BEATS[2] - 1.6) / .4).toFixed(3);
+  }
+
+  function resize() {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h;
+    camera.setViewOffset(w, h, w * .14, h * .075, w, h); camera.updateProjectionMatrix();
+  }
+  let t = 0, playing = !RECORD, last = performance.now();
+  new ResizeObserver(() => { resize(); render(t); }).observe(stage);
+  const playBtn = document.getElementById('play');
+  playBtn.onclick = () => { playing = !playing; playBtn.textContent = playing ? 'Pause' : 'Play'; last = performance.now(); };
+  document.getElementById('restart').onclick = () => { t = 0; playing = true; playBtn.textContent = 'Pause'; };
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches && !RECORD) { playing = false; playBtn.textContent = 'Play'; }
+  function loop(now) { const dt = Math.min(.1, (now - last) / 1000); last = now; if (playing) { t += dt; if (t >= DUR) t = 0; render(t); } requestAnimationFrame(loop); }
+  resize(); render(0);
+  if (!RECORD) requestAnimationFrame(loop);
+  window.__render = T => render(T); window.__DUR = DUR;
+})();
+</script>
